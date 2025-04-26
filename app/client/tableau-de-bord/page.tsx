@@ -165,220 +165,223 @@ export default function TableauDeBordClient() {
             </TabsList>
           </Tabs>
 
-          <TabsContent value="locations" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold">Mes locations</h2>
-              <Link href="/catalogue">
-                <Button className="bg-primary hover:bg-primary/90">Nouvelle location</Button>
-              </Link>
-            </div>
+          {/* Wrap all TabsContent components in a Tabs component */}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsContent value="locations" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Mes locations</h2>
+                <Link href="/catalogue">
+                  <Button className="bg-primary hover:bg-primary/90">Nouvelle location</Button>
+                </Link>
+              </div>
 
-            {locations.length > 0 ? (
-              <div className="space-y-4">
-                {locations.map((location) => (
-                  <Card key={location.id} className="card-hover-effect">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-4">
-                        <img
-                          src={location.image || "/placeholder.svg"}
-                          alt={location.equipement}
-                          className="w-16 h-16 rounded-md object-cover"
-                        />
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="font-medium">{location.equipement}</h3>
-                              <div className="flex items-center text-sm text-zinc-500 mt-1">
-                                <Calendar className="mr-1 h-3 w-3" />
-                                <span>
-                                  {location.debut.toLocaleDateString("fr-FR")} -{" "}
-                                  {location.fin.toLocaleDateString("fr-FR")}
-                                </span>
+              {locations.length > 0 ? (
+                <div className="space-y-4">
+                  {locations.map((location) => (
+                    <Card key={location.id} className="card-hover-effect">
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-4">
+                          <img
+                            src={location.image || "/placeholder.svg"}
+                            alt={location.equipement}
+                            className="w-16 h-16 rounded-md object-cover"
+                          />
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h3 className="font-medium">{location.equipement}</h3>
+                                <div className="flex items-center text-sm text-zinc-500 mt-1">
+                                  <Calendar className="mr-1 h-3 w-3" />
+                                  <span>
+                                    {location.debut.toLocaleDateString("fr-FR")} -{" "}
+                                    {location.fin.toLocaleDateString("fr-FR")}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                            <div className="flex flex-col items-end">
-                              {getStatusBadge(location.statut)}
-                              <p className="text-sm font-medium mt-1">{location.prix.toLocaleString()} FCFA</p>
+                              <div className="flex flex-col items-end">
+                                {getStatusBadge(location.statut)}
+                                <p className="text-sm font-medium mt-1">{location.prix.toLocaleString()} FCFA</p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="px-4 py-2 border-t flex justify-between">
-                      <Button variant="ghost" size="sm">
-                        <FileText className="mr-2 h-4 w-4" />
-                        Voir détails
-                      </Button>
-                      {location.statut === "en-cours" && (
-                        <Button variant="outline" size="sm">
-                          <MessageSquare className="mr-2 h-4 w-4" />
-                          Contacter support
+                      </CardContent>
+                      <CardFooter className="px-4 py-2 border-t flex justify-between">
+                        <Button variant="ghost" size="sm">
+                          <FileText className="mr-2 h-4 w-4" />
+                          Voir détails
                         </Button>
-                      )}
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-            ) : (
+                        {location.statut === "en-cours" && (
+                          <Button variant="outline" size="sm">
+                            <MessageSquare className="mr-2 h-4 w-4" />
+                            Contacter support
+                          </Button>
+                        )}
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <h3 className="font-medium mb-2">Aucune location</h3>
+                    <p className="text-zinc-500 mb-4">Vous n&apos;avez pas encore de locations</p>
+                    <Link href="/catalogue">
+                      <Button className="bg-primary hover:bg-primary/90">Parcourir le catalogue</Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            <TabsContent value="profil">
               <Card>
-                <CardContent className="p-8 text-center">
-                  <h3 className="font-medium mb-2">Aucune location</h3>
-                  <p className="text-zinc-500 mb-4">Vous n&apos;avez pas encore de locations</p>
-                  <Link href="/catalogue">
-                    <Button className="bg-primary hover:bg-primary/90">Parcourir le catalogue</Button>
-                  </Link>
+                <CardHeader>
+                  <CardTitle>Mon profil</CardTitle>
+                  <CardDescription>Gérez vos informations personnelles</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-center mb-4">
+                    <Avatar className="h-24 w-24">
+                      <AvatarImage src="/placeholder.svg?height=96&width=96" alt="Avatar" />
+                      <AvatarFallback className="text-lg">CN</AvatarFallback>
+                    </Avatar>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-zinc-500">Prénom</p>
+                      <p className="font-medium">Client</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-500">Nom</p>
+                      <p className="font-medium">Nom</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-500">Email</p>
+                      <p className="font-medium">client@example.com</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-500">Téléphone</p>
+                      <p className="font-medium">+123 456 789</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-500">Numéro CNI</p>
+                      <p className="font-medium">1234567890</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-500">Membre depuis</p>
+                      <p className="font-medium">Avril 2025</p>
+                    </div>
+                  </div>
                 </CardContent>
+                <CardFooter className="flex justify-end">
+                  <Button className="bg-primary hover:bg-primary/90">Modifier le profil</Button>
+                </CardFooter>
               </Card>
-            )}
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent value="profil">
-            <Card>
-              <CardHeader>
-                <CardTitle>Mon profil</CardTitle>
-                <CardDescription>Gérez vos informations personnelles</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-center mb-4">
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src="/placeholder.svg?height=96&width=96" alt="Avatar" />
-                    <AvatarFallback className="text-lg">CN</AvatarFallback>
-                  </Avatar>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-zinc-500">Prénom</p>
-                    <p className="font-medium">Client</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-zinc-500">Nom</p>
-                    <p className="font-medium">Nom</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-zinc-500">Email</p>
-                    <p className="font-medium">client@example.com</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-zinc-500">Téléphone</p>
-                    <p className="font-medium">+123 456 789</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-zinc-500">Numéro CNI</p>
-                    <p className="font-medium">1234567890</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-zinc-500">Membre depuis</p>
-                    <p className="font-medium">Avril 2025</p>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-end">
-                <Button className="bg-primary hover:bg-primary/90">Modifier le profil</Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="support">
-            <Card>
-              <CardHeader>
-                <CardTitle>Support client</CardTitle>
-                <CardDescription>Besoin d&apos;aide ? Contactez notre équipe de support</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="subject" className="text-sm font-medium">
-                    Sujet
-                  </label>
-                  <select
-                    id="subject"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <option value="">Sélectionnez un sujet</option>
-                    <option value="location">Question sur une location</option>
-                    <option value="facturation">Problème de facturation</option>
-                    <option value="technique">Problème technique</option>
-                    <option value="autre">Autre</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={5}
-                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Décrivez votre problème ou question..."
-                  ></textarea>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-end">
-                <Button className="bg-primary hover:bg-primary/90">Envoyer</Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="parametres">
-            <Card>
-              <CardHeader>
-                <CardTitle>Paramètres du compte</CardTitle>
-                <CardDescription>Gérez les paramètres de votre compte</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <h3 className="text-lg font-medium">Notifications</h3>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Notifications par email</p>
-                      <p className="text-sm text-zinc-500">Recevoir des emails pour les mises à jour de location</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" defaultChecked />
-                      <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+            <TabsContent value="support">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Support client</CardTitle>
+                  <CardDescription>Besoin d&apos;aide ? Contactez notre équipe de support</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <label htmlFor="subject" className="text-sm font-medium">
+                      Sujet
                     </label>
+                    <select
+                      id="subject"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="">Sélectionnez un sujet</option>
+                      <option value="location">Question sur une location</option>
+                      <option value="facturation">Problème de facturation</option>
+                      <option value="technique">Problème technique</option>
+                      <option value="autre">Autre</option>
+                    </select>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Notifications par SMS</p>
-                      <p className="text-sm text-zinc-500">Recevoir des SMS pour les alertes importantes</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" />
-                      <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="text-sm font-medium">
+                      Message
                     </label>
+                    <textarea
+                      id="message"
+                      rows={5}
+                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Décrivez votre problème ou question..."
+                    ></textarea>
                   </div>
-                </div>
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                  <Button className="bg-primary hover:bg-primary/90">Envoyer</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
 
-                <div className="space-y-2">
-                  <h3 className="text-lg font-medium">Sécurité</h3>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Clock className="mr-2 h-4 w-4" />
-                    Changer le mot de passe
+            <TabsContent value="parametres">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Paramètres du compte</CardTitle>
+                  <CardDescription>Gérez les paramètres de votre compte</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">Notifications</h3>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Notifications par email</p>
+                        <p className="text-sm text-zinc-500">Recevoir des emails pour les mises à jour de location</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" defaultChecked />
+                        <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                      </label>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Notifications par SMS</p>
+                        <p className="text-sm text-zinc-500">Recevoir des SMS pour les alertes importantes</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" />
+                        <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">Sécurité</h3>
+                    <Button variant="outline" className="w-full justify-start">
+                      <Clock className="mr-2 h-4 w-4" />
+                      Changer le mot de passe
+                    </Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium">Préférences</h3>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Mode sombre</p>
+                        <p className="text-sm text-zinc-500">Activer le mode sombre pour l&apos;interface</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" />
+                        <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                      </label>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                  <Button variant="outline" className="text-red-500 hover:text-red-700 hover:bg-red-50">
+                    Déconnexion
                   </Button>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-lg font-medium">Préférences</h3>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Mode sombre</p>
-                      <p className="text-sm text-zinc-500">Activer le mode sombre pour l&apos;interface</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" />
-                      <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                    </label>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-end">
-                <Button variant="outline" className="text-red-500 hover:text-red-700 hover:bg-red-50">
-                  Déconnexion
-                </Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
