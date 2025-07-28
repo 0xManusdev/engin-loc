@@ -1,264 +1,355 @@
 import Link from "next/link"
 import {
-  ArrowRight,
-  Users,
-  Building,
-  PenToolIcon as Tool,
-  Car,
-  Zap,
-  ShoppingBag,
-  Headset,
-  Lock,
-  HelpCircle,
+	ArrowRight,
+	Users,
+	Building,
+	PenToolIcon as Tool,
+	Car,
+	Zap,
+	ShoppingBag,
+	Headset,
+	Lock,
+	HelpCircle,
+	HandCoins,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
+
+
+const categorie = [
+	{
+		name: "Engins BTP",
+		description: "Grues, tractopelles, chargeuses et plus",
+		bgUrl: "/btp-img.jpg",
+		href: "/catalogue/btp",
+		color: "primary",
+	},
+	{
+		name: "Véhicules",
+		description: "Avec ou sans conducteur, co-voiturage",
+		bgUrl: "/voiture-img.jpg",
+		href: "/catalogue/vehicules",
+		color: "secondary",
+	},
+	{
+		name: "Énergie",
+		description: "Groupes électrogènes, panneaux solaires",
+		bgUrl: "/energy-img.jpg",
+		href: "/catalogue/energie",
+		color: "accent",
+	},
+]
+
+
+const services = [
+	{
+		name: "Vente & Achat",
+		description: "Achetez ou vendez vos équipements",
+		icon: ShoppingBag,
+		href: "/vente-achat",
+		color: "primary",
+	},
+	{
+		name: "Service Après-Vente",
+		description: "Support et maintenance de vos équipements",
+		icon: Headset,
+		href: "/service-apres-vente",
+		color: "secondary",
+	},
+	{
+		name: "Sûreté & Sécurité",
+		description: "Sécurisez vos actifs et équipements",
+		icon: Lock,
+		href: "/surete-securite",
+		color: "accent",
+	},
+	{
+		name: "Conseils & Assistance",
+		description: "Expertise et accompagnement",
+		icon: HelpCircle,
+		href: "/conseils-assistance",
+		color: "green",
+	},
+]
+
+const testimonials = [
+	{
+		name: "Thomas Dubois",
+		content: "J'ai pu trouver rapidement un groupe électrogène pour mon chantier. Service impeccable et livraison rapide.",
+		icon: Users,
+		bgUrl: "/testimonial-1.jpg",
+		rating: 5,
+		color: "primary",
+	},
+	{
+		name: "Entreprise Énergie Plus",
+		content: "En tant que partenaire, j'ai pu rentabiliser mes équipements inutilisés. La plateforme est intuitive et efficace.",
+		icon: Building,
+		bgUrl: "/testimonial-1.jpg",
+		rating: 5,
+		color: "secondary",
+	},
+	{
+		name: "Marie Laurent",
+		content: "J'ai vendu mon tractopelle en quelques jours grâce à la plateforme. Le processus était simple et sécurisé.",
+		icon: HandCoins,
+		bgUrl: "/testimonial-1.jpg",
+		rating: 5,
+		color: "accent",
+	},
+]
 
 export default function Home() {
-  return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-primary/10 to-white">
-        <div className="container px-4 md:px-6">
-          <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  Location et vente d&apos;équipements professionnels
-                </h1>
-                <p className="max-w-[600px] text-zinc-500 md:text-xl">
-                  Trouvez, louez ou achetez des équipements de qualité pour vos projets. Engins BTP, véhicules, énergie
-                  et plus encore.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link href="/catalogue">
-                  <Button className="px-8 bg-primary hover:bg-primary/90">Voir le catalogue</Button>
-                </Link>
-                <Link href="/vente-achat">
-                  <Button variant="outline" className="px-8 border-primary text-primary hover:bg-primary/10">
-                    Acheter & Vendre
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <img
-                alt="Équipement professionnel"
-                className="aspect-video overflow-hidden rounded-xl object-cover object-center shadow-lg"
-                height="310"
-                src="/placeholder.svg?height=310&width=550"
-                width="550"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+	return (
+		<div className="flex flex-col min-h-screen">
+			{/* Hero Section */}
+			<section className="w-full py-12 md:py-24 lg:py-32 relative">
+				<div className="absolute inset-0 bg-[url('/banner-img.jpg')] bg-cover bg-center bg-no-repeat blur-sm from-primary/10 to-white" />
+				<div className="absolute inset-0 bg-black/50" />
+				<div className="container relative flex items-center justify-center px-4 md:px-6 ">
+					<div className="flex flex-col justify-center items-center space-y-4 max-w-[75%]">
+						<div className="space-y-2 flex flex-col items-center">
+							<h1 className="text-3xl text-white font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-center">
+								Location et vente d&apos;équipements professionnels
+							</h1>
+							<p className="max-w-[75%] text-center text-white/80 md:text-xl">
+								Trouvez, louez ou achetez des équipements de qualité pour vos projets. Engins BTP, véhicules, énergie
+								et plus encore.
+							</p>
+						</div>
+						<div className="flex flex-col gap-2 min-[400px]:flex-row">
+							<Link href="/catalogue">
+								<Button className="px-8 rounded-full bg-primary hover:bg-primary/90">Voir le catalogue</Button>
+							</Link>
+							<Link href="/vente-achat">
+								<Button variant="outline" className="px-8 rounded-full border-none hover:text-white hover:bg-primary/10">
+									Acheter & Vendre
+								</Button>
+							</Link>
+						</div>
+					</div>
+				</div>
+			</section>
 
-      {/* Categories Section */}
-      <section className="w-full py-12 md:py-24 bg-white">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Nos Catégories</h2>
-              <p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Découvrez notre large gamme d&apos;équipements professionnels
-              </p>
-            </div>
-          </div>
+			{/* Categories Section */}
+			<section className="w-full py-12 md:py-24 bg-white">
 
-          <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-            <Link href="/catalogue/btp">
-              <Card className="overflow-hidden transition-all hover:shadow-lg">
-                <div className="aspect-video relative bg-primary/10">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Tool className="h-16 w-16 text-primary" />
-                  </div>
-                </div>
-                <CardContent className="p-4 text-center">
-                  <h3 className="text-xl font-bold">Engins BTP</h3>
-                  <p className="text-sm text-zinc-500 mt-1">Grues, tractopelles, chargeuses et plus</p>
-                </CardContent>
-              </Card>
-            </Link>
+				<div className="container px-4 md:px-6">
+					<div className="flex flex-col items-center justify-center space-y-4 text-center">
+						<div className="space-y-2">
+							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Nos Catégories</h2>
+							<p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+								Découvrez notre large gamme d&apos;équipements professionnels
+							</p>
+						</div>
+					</div>
 
-            <Link href="/catalogue/vehicules">
-              <Card className="overflow-hidden transition-all hover:shadow-lg">
-                <div className="aspect-video relative bg-secondary/10">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Car className="h-16 w-16 text-secondary" />
-                  </div>
-                </div>
-                <CardContent className="p-4 text-center">
-                  <h3 className="text-xl font-bold">Véhicules</h3>
-                  <p className="text-sm text-zinc-500 mt-1">Avec ou sans conducteur, co-voiturage</p>
-                </CardContent>
-              </Card>
-            </Link>
+					<div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
+						{categorie.map((categorie) => (
+							<Link href={categorie.href}>
+								<Card className="overflow-hidden transition-all hover:shadow-lg">
+									<div className="aspect-video relative bg-primary/10">
+										<div className="absolute inset-0 flex items-center justify-center">
+											<Image src={categorie.bgUrl} alt={categorie.name} fill className="object-cover" />
+										</div>
+									</div>
+									<CardContent className="p-4 text-center">
+										<h3 className="text-xl font-bold">{categorie.name}</h3>
+										<p className="text-sm text-zinc-500 mt-1">{categorie.description}</p>
+									</CardContent>
+								</Card>
+							</Link>
+						))}
+					</div>
 
-            <Link href="/catalogue/energie">
-              <Card className="overflow-hidden transition-all hover:shadow-lg">
-                <div className="aspect-video relative bg-accent/10">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Zap className="h-16 w-16 text-accent" />
-                  </div>
-                </div>
-                <CardContent className="p-4 text-center">
-                  <h3 className="text-xl font-bold">Énergie</h3>
-                  <p className="text-sm text-zinc-500 mt-1">Groupes électrogènes, panneaux solaires</p>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
-        </div>
-      </section>
+				</div>
+			</section>
 
-      {/* Services Section */}
-      <section className="w-full py-12 md:py-24 bg-zinc-50">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Nos Services</h2>
-              <p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Une plateforme complète pour tous vos besoins professionnels
-              </p>
-            </div>
-          </div>
 
-          <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-4">
-            <Link href="/vente-achat">
-              <Card className="overflow-hidden transition-all hover:shadow-lg">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="rounded-full bg-primary/10 p-3 mb-4">
-                    <ShoppingBag className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="font-bold">Vente & Achat</h3>
-                  <p className="text-sm text-zinc-500 mt-2">Achetez ou vendez vos équipements</p>
-                </CardContent>
-              </Card>
-            </Link>
+			{/* <Link href="/catalogue/btp">
+				<Card className="overflow-hidden transition-all hover:shadow-lg">
+					<div className="aspect-video relative bg-primary/10">
+						<div className="absolute inset-0 flex items-center justify-center">
+							<Tool className="h-16 w-16 text-primary" />
+						</div>
+					</div>
+					<CardContent className="p-4 text-center">
+						<h3 className="text-xl font-bold">Engins BTP</h3>
+						<p className="text-sm text-zinc-500 mt-1">Grues, tractopelles, chargeuses et plus</p>
+					</CardContent>
+				</Card>
+			</Link>
 
-            <Link href="/service-apres-vente">
-              <Card className="overflow-hidden transition-all hover:shadow-lg">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="rounded-full bg-secondary/10 p-3 mb-4">
-                    <Headset className="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 className="font-bold">Service Après-Vente</h3>
-                  <p className="text-sm text-zinc-500 mt-2">Support et maintenance</p>
-                </CardContent>
-              </Card>
-            </Link>
+			<Link href="/catalogue/vehicules">
+				<Card className="overflow-hidden transition-all hover:shadow-lg">
+					<div className="aspect-video relative bg-secondary/10">
+						<div className="absolute inset-0 flex items-center justify-center">
+							<Car className="h-16 w-16 text-secondary" />
+						</div>
+					</div>
+					<CardContent className="p-4 text-center">
+						<h3 className="text-xl font-bold">Véhicules</h3>
+						<p className="text-sm text-zinc-500 mt-1">Avec ou sans conducteur, co-voiturage</p>
+					</CardContent>
+				</Card>
+			</Link>
 
-            <Link href="/surete-securite">
-              <Card className="overflow-hidden transition-all hover:shadow-lg">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="rounded-full bg-accent/10 p-3 mb-4">
-                    <Lock className="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 className="font-bold">Sûreté & Sécurité</h3>
-                  <p className="text-sm text-zinc-500 mt-2">Sécurisez vos actifs et équipements</p>
-                </CardContent>
-              </Card>
-            </Link>
+			<Link href="/catalogue/energie">
+				<Card className="overflow-hidden transition-all hover:shadow-lg">
+					<div className="aspect-video relative bg-accent/10">
+						<div className="absolute inset-0 flex items-center justify-center">
+							<Zap className="h-16 w-16 text-accent" />
+						</div>
+					</div>
+					<CardContent className="p-4 text-center">
+						<h3 className="text-xl font-bold">Énergie</h3>
+						<p className="text-sm text-zinc-500 mt-1">Groupes électrogènes, panneaux solaires</p>
+					</CardContent>
+				</Card>
+			</Link> */}
 
-            <Link href="/conseils-assistance">
-              <Card className="overflow-hidden transition-all hover:shadow-lg">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="rounded-full bg-green-100 p-3 mb-4">
-                    <HelpCircle className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h3 className="font-bold">Conseils & Assistance</h3>
-                  <p className="text-sm text-zinc-500 mt-2">Expertise et accompagnement</p>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="w-full py-12 md:py-24 bg-gradient-to-r from-primary/20 to-secondary/20">
-        <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Vous possédez des équipements?</h2>
-            <p className="max-w-[600px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Rejoignez notre réseau de partenaires et générez des revenus supplémentaires en louant ou vendant vos
-              machines.
-            </p>
-          </div>
-          <div className="flex flex-col gap-2 min-[400px]:flex-row lg:justify-end">
-            <Link href="/devenir-partenaire">
-              <Button className="px-8 bg-primary hover:bg-primary/90 btn-hover-effect">
-                Devenir Partenaire
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+			{/* Services Section */}
+			<section className="w-full py-12 md:py-24 bg-white">
+				<div className="container px-4 md:px-6">
+					<div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+						<div className="space-y-2">
+							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Nos Services</h2>
+							<p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+								Une plateforme complète pour tous vos besoins professionnels
+							</p>
+						</div>
+					</div>
 
-      {/* Testimonials */}
-      <section className="w-full py-12 md:py-24 bg-white">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Témoignages</h2>
-              <p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Ce que nos clients et partenaires disent de nous
-              </p>
-            </div>
-          </div>
-          <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3">
-            <div className="flex flex-col justify-center space-y-4 rounded-lg border p-6 card-hover-effect">
-              <p className="text-zinc-500 italic">
-                "J&apos;ai pu trouver rapidement un groupe électrogène pour mon chantier. Service impeccable et
-                livraison rapide."
-              </p>
-              <div className="flex items-center space-x-4">
-                <div className="rounded-full bg-primary/10 p-1">
-                  <Users className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Thomas Dubois</p>
-                  <p className="text-xs text-zinc-500">Client</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col justify-center space-y-4 rounded-lg border p-6 card-hover-effect">
-              <p className="text-zinc-500 italic">
-                "En tant que partenaire, j&apos;ai pu rentabiliser mes équipements inutilisés. La plateforme est
-                intuitive et efficace."
-              </p>
-              <div className="flex items-center space-x-4">
-                <div className="rounded-full bg-secondary/10 p-1">
-                  <Building className="h-4 w-4 text-secondary" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Entreprise Énergie Plus</p>
-                  <p className="text-xs text-zinc-500">Partenaire</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col justify-center space-y-4 rounded-lg border p-6 card-hover-effect">
-              <p className="text-zinc-500 italic">
-                "J&apos;ai vendu mon tractopelle en quelques jours grâce à la plateforme. Le processus était simple et
-                sécurisé."
-              </p>
-              <div className="flex items-center space-x-4">
-                <div className="rounded-full bg-accent/10 p-1">
-                  <Tool className="h-4 w-4 text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Marie Laurent</p>
-                  <p className="text-xs text-zinc-500">Vendeuse</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
+
+					<div className="flex flex-row items-center justify-center text-center gap-4">
+						{services.map((service) => (
+							<Link href={service.href}>
+								<Card className="overflow-hidden w-60 h-48 transition-all hover:shadow-lg">
+									<CardContent className="p-6 flex flex-col items-center text-center">
+										<div className="rounded-full bg-primary/10 p-3 mb-4">
+											<service.icon className="h-6 w-6 text-primary" />
+										</div>
+										<h3 className="font-bold">{service.name}</h3>
+										<p className="text-sm text-zinc-500 mt-2">{service.description}</p>
+									</CardContent>
+								</Card>
+							</Link>
+						))}
+					</div>
+				</div>
+			</section>
+			{/* <section className="w-full py-12 md:py-24 bg-zinc-50" >
+					<div className="container px-4 md:px-6">
+						
+
+						<div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-4">
+							<Link href="/vente-achat">
+								<Card className="overflow-hidden transition-all hover:shadow-lg">
+									<CardContent className="p-6 flex flex-col items-center text-center">
+										<div className="rounded-full bg-primary/10 p-3 mb-4">
+											<ShoppingBag className="h-6 w-6 text-primary" />
+										</div>
+										<h3 className="font-bold">Vente & Achat</h3>
+										<p className="text-sm text-zinc-500 mt-2">Achetez ou vendez vos équipements</p>
+									</CardContent>
+								</Card>
+							</Link>
+
+							<Link href="/service-apres-vente">
+								<Card className="overflow-hidden transition-all hover:shadow-lg">
+									<CardContent className="p-6 flex flex-col items-center text-center">
+										<div className="rounded-full bg-secondary/10 p-3 mb-4">
+											<Headset className="h-6 w-6 text-secondary" />
+										</div>
+										<h3 className="font-bold">Service Après-Vente</h3>
+										<p className="text-sm text-zinc-500 mt-2">Support et maintenance</p>
+									</CardContent>
+								</Card>
+							</Link>
+
+							<Link href="/surete-securite">
+								<Card className="overflow-hidden transition-all hover:shadow-lg">
+									<CardContent className="p-6 flex flex-col items-center text-center">
+										<div className="rounded-full bg-accent/10 p-3 mb-4">
+											<Lock className="h-6 w-6 text-accent" />
+										</div>
+										<h3 className="font-bold">Sûreté & Sécurité</h3>
+										<p className="text-sm text-zinc-500 mt-2">Sécurisez vos actifs et équipements</p>
+									</CardContent>
+								</Card>
+							</Link>
+
+							<Link href="/conseils-assistance">
+								<Card className="overflow-hidden transition-all hover:shadow-lg">
+									<CardContent className="p-6 flex flex-col items-center text-center">
+										<div className="rounded-full bg-green-100 p-3 mb-4">
+											<HelpCircle className="h-6 w-6 text-green-600" />
+										</div>
+										<h3 className="font-bold">Conseils & Assistance</h3>
+										<p className="text-sm text-zinc-500 mt-2">Expertise et accompagnement</p>
+									</CardContent>
+								</Card>
+							</Link>
+						</div>
+					</div>
+				</section> */}
+
+			{/* CTA Section */}
+			<section className="w-full py-12 md:py-24 bg-gradient-to-r from-[#D9D9D9] to-[#D9D9D9]/90" >
+				<div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
+					<div className="space-y-2">
+						<h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Vous possédez des équipements?</h2>
+						<p className="max-w-[600px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+							Rejoignez notre réseau de partenaires et générez des revenus supplémentaires en louant ou vendant vos
+							machines.
+						</p>
+					</div>
+					<div className="flex flex-col gap-2 min-[400px]:flex-row lg:justify-end">
+						<Link href="/devenir-partenaire">
+							<Button className="px-8 bg-accent hover:bg-accent/90 btn-hover-effect">
+								Devenir Partenaire
+								<ArrowRight className="ml-2 h-4 w-4" />
+							</Button>
+						</Link>
+					</div>
+				</div>
+			</section>
+
+			{/* Testimonials */}
+			<section className="w-full py-12 md:py-24 bg-white" >
+				<div className="container px-4 md:px-6">
+					<div className="flex flex-col items-center justify-center space-y-4 text-center">
+						<div className="space-y-2">
+							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Témoignages</h2>
+							<p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+								Ce que nos clients et partenaires disent de nous
+							</p>
+						</div>
+					</div>
+					<div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3">
+						{testimonials.map((testimonial, index) => (
+							<div key={index}>
+								<div className="flex flex-col justify-center space-y-4 rounded-lg border p-6 card-hover-effect">
+									{/* <p className="text-zinc-500 italic">
+										{testimonial.content}
+									</p> */}
+									<div className="flex flex-col items-center space-y-4">
+										<p className="text-sm text-zinc-500">{testimonial.content}</p>
+										<div className={`p-1 flex flex-row items-center space-x-2`}>
+											<testimonial.icon className={`h-4 w-4 text-${testimonial.color}`} />
+											<p className="text-sm font-medium">{testimonial.name}</p>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+		</div>
+	)
 }
