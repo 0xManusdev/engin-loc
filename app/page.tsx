@@ -46,7 +46,7 @@ const services = [
 		name: "Vente & Achat",
 		description: "Achetez ou vendez vos équipements",
 		icon: ShoppingBag,
-		href: "/vente-achat",
+		href: "/client/vente-achat",
 		color: "primary",
 	},
 	{
@@ -113,10 +113,10 @@ export default function Home() {
 							Trouvez, louez ou achetez des équipements de qualité pour vos projets. Engins BTP, véhicules, énergie et plus encore.
 						</p>
 						<div className="flex flex-col gap-3 sm:flex-row">
-							<Link href="/catalogue">
+							<Link href="/client/catalogue">
 								<Button className="px-8 rounded-full bg-primary hover:bg-primary/90">Voir le catalogue</Button>
 							</Link>
-							<Link href="/vente-achat">
+							<Link href="/client/vente-achat">
 								<Button variant="outline" className="px-8 rounded-full border-none hover:text-white hover:bg-primary/10">
 									Acheter & Vendre
 								</Button>
