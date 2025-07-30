@@ -168,7 +168,7 @@ export function SiteHeader() {
                                     <div className="space-y-2 pt-4 border-t">
                                         {[
                                             ["/client/devenir-partenaire", "Devenir Partenaire"],
-                                            ["/client/contact", "Contact"],
+                                            ["/contact", "Contact"],
                                             ["/connexion", "Connexion"],
                                             ["/inscription", "Inscription"],
                                             ["/client/tableau-de-bord", "Espace Client"],
