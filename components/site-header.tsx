@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { useState } from "react"
 import {
-    Menu, Search, ShoppingCart, MessageCircle, User, Building, ChevronDown
+    Menu, Search, ShoppingCart, MessageCircle, User, Building, ChevronDown,
+    LogOut
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -12,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
+import { useAuthStore } from "@/store/auth"
 
 export function SiteHeader() {
     const [isOpen, setIsOpen] = useState(false)
@@ -41,9 +42,9 @@ export function SiteHeader() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-56">
-                            <DropdownMenuItem asChild><Link href="/client/catalogue/btp">Engins BTP</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/catalogue/vehicules">Véhicules</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/catalogue/energie">Énergie</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/client/client/catalogue/btp">Engins BTP</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/client/client/catalogue/vehicules">Véhicules</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/client/client/catalogue/energie">Énergie</Link></DropdownMenuItem>
                             <DropdownMenuItem asChild><Link href="/client/catalogue">Voir tout</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -69,31 +70,6 @@ export function SiteHeader() {
 
                 {/* Right actions - Desktop */}
                 <div className="hidden md:flex items-center gap-4">
-                    {/* <form onSubmit={handleSearch} className="relative w-60">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-zinc-500" />
-                        <Input
-                            type="search"
-                            placeholder="Rechercher..."
-                            className="pl-8 pr-4"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </form> */}
-
-                    {/* <Link href="/favoris">
-                        <Button variant="ghost" size="icon" className="relative">
-                            <ShoppingCart className="h-5 w-5" />
-                            <Badge className="absolute -top-1 -right-1 text-xs">2</Badge>
-                        </Button>
-                    </Link>
-
-                    <Link href="/messages">
-                        <Button variant="ghost" size="icon" className="relative">
-                            <MessageCircle className="h-5 w-5" />
-                            <Badge className="absolute -top-1 -right-1 text-xs">3</Badge>
-                        </Button>
-                    </Link> */}
-
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="icon" className="rounded-full">
@@ -101,10 +77,20 @@ export function SiteHeader() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56">
-                            <DropdownMenuItem asChild><Link href="/connexion"><User className="mr-2 h-4 w-4" />Se connecter</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/inscription"><Building className="mr-2 h-4 w-4" />Inscription</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/tableau-de-bord">Espace Client</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/partenaire/tableau-de-bord">Espace Partenaire</Link></DropdownMenuItem>
+                            {
+                                useAuthStore.getState().isAuthenticated ? (
+                                    <>
+                                        <DropdownMenuItem asChild><Link href="/profil"><User className="mr-2 h-4 w-4" />Mon Profil</Link></DropdownMenuItem>
+                                        <DropdownMenuItem asChild><Link href="/deconnexion"><LogOut className="mr-2 h-4 w-4" />Se déconnecter</Link></DropdownMenuItem>
+                                    </>
+                                ) : (
+                                    <>
+                                        <DropdownMenuItem asChild><Link href="/connexion"><User className="mr-2 h-4 w-4" />Se connecter</Link></DropdownMenuItem>
+                                        <DropdownMenuItem asChild><Link href="/inscription"><Building className="mr-2 h-4 w-4" />Inscription</Link></DropdownMenuItem>
+                                        <DropdownMenuItem asChild><Link href="/client/tableau-de-bord">Espace Client</Link></DropdownMenuItem>
+                                        <DropdownMenuItem asChild><Link href="/partenaire/tableau-de-bord">Espace Partenaire</Link></DropdownMenuItem>
+                                    </>
+                                )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

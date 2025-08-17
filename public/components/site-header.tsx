@@ -40,13 +40,13 @@ export function SiteHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-56">
                 <DropdownMenuItem asChild>
-                  <Link href="/catalogue/btp">Engins BTP</Link>
+                  <Link href="/client/catalogue/btp">Engins BTP</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/catalogue/vehicules">Véhicules</Link>
+                  <Link href="/client/catalogue/vehicules">Véhicules</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/catalogue/energie">Énergie</Link>
+                  <Link href="/client/catalogue/energie">Énergie</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/catalogue">Voir tout</Link>
@@ -180,21 +180,21 @@ export function SiteHeader() {
                     <h3 className="mb-2 text-sm font-medium">Catalogue</h3>
                     <div className="space-y-2 pl-2">
                       <Link
-                        href="/catalogue/btp"
+                        href="/client/catalogue/btp"
                         onClick={() => setIsOpen(false)}
                         className="block text-sm text-zinc-500 hover:text-primary"
                       >
                         Engins BTP
                       </Link>
                       <Link
-                        href="/catalogue/vehicules"
+                        href="/client/catalogue/vehicules"
                         onClick={() => setIsOpen(false)}
                         className="block text-sm text-zinc-500 hover:text-primary"
                       >
                         Véhicules
                       </Link>
                       <Link
-                        href="/catalogue/energie"
+                        href="/client/catalogue/energie"
                         onClick={() => setIsOpen(false)}
                         className="block text-sm text-zinc-500 hover:text-primary"
                       >

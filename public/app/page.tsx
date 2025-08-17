@@ -69,7 +69,7 @@ export default function Home() {
           </div>
 
           <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-            <Link href="/catalogue/btp">
+            <Link href="/client/catalogue/btp">
               <Card className="overflow-hidden transition-all hover:shadow-lg">
                 <div className="aspect-video relative bg-primary/10">
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -83,7 +83,7 @@ export default function Home() {
               </Card>
             </Link>
 
-            <Link href="/catalogue/vehicules">
+            <Link href="/client/catalogue/vehicules">
               <Card className="overflow-hidden transition-all hover:shadow-lg">
                 <div className="aspect-video relative bg-secondary/10">
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -97,7 +97,7 @@ export default function Home() {
               </Card>
             </Link>
 
-            <Link href="/catalogue/energie">
+            <Link href="/client/catalogue/energie">
               <Card className="overflow-hidden transition-all hover:shadow-lg">
                 <div className="aspect-video relative bg-accent/10">
                   <div className="absolute inset-0 flex items-center justify-center">

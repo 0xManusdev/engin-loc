@@ -106,11 +106,6 @@ export default function InscriptionPage() {
 	const handlePartenaireSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// if (partenaireForm.password !== confirmPassword) {
-		// 	alert("Les mots de passe ne correspondent pas");
-		// 	return;
-		// }
-
 		if (!partenaireForm.acceptTerms) {
 			alert("Veuillez accepter les conditions d'utilisation");
 			return;

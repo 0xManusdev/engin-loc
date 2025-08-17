@@ -47,17 +47,17 @@ export function SiteFooter() {
             <h3 className="text-lg font-bold">Catalogue</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/catalogue/btp" className="text-sm text-zinc-500 hover:text-zinc-900">
+                <Link href="/client/catalogue/btp" className="text-sm text-zinc-500 hover:text-zinc-900">
                   Engins BTP
                 </Link>
               </li>
               <li>
-                <Link href="/catalogue/vehicules" className="text-sm text-zinc-500 hover:text-zinc-900">
+                <Link href="/client/catalogue/vehicules" className="text-sm text-zinc-500 hover:text-zinc-900">
                   Véhicules
                 </Link>
               </li>
               <li>
-                <Link href="/catalogue/energie" className="text-sm text-zinc-500 hover:text-zinc-900">
+                <Link href="/client/catalogue/energie" className="text-sm text-zinc-500 hover:text-zinc-900">
                   Énergie
                 </Link>
               </li>

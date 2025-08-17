@@ -1,3 +1,4 @@
+'use client';
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
@@ -5,50 +6,41 @@ import { toast } from '@/hooks/use-toast';
 // const API_URL = "http://localhost:8000/api";
 const API_URL = process.env.API_URL
 
-interface Machine {
+interface Category {
     id: number;
-    name: string;
+    nom: string;
     description: string;
-    state: string;
-    location: string;
     createdAt: string;
     updatedAt: string;
-    subCategoryId: number;
-    brandId: number;
-    subCategory: {
-        id: number;
-        categoryId: number;
-        nom: string;
-        description: string;
-        createdAt: string;
-        updatedAt: string;
-    };
-    brand: {
-        id: number;
-        nom: string;
-        createdAt: string;
-        updatedAt: string;
-    };
-    images: {
-        id: number;
-        machineId: number;
-        imageUrl: string;
-        altText: string;
-        position: number;
-        createdAt: string;
-    }[];
 }
 
-export function useGetAllMachines() {
+interface Pagination {
+    total: number;
+    limit: number;
+    offset: number;
+    totalPages: number;
+}
+
+export interface CategoriesResponse {
+    success: boolean;
+    message: string;
+    data: {
+        categories: Category[];
+        pagination: Pagination;
+    };
+}
+
+export function useGetAllCategories() {
     return useQuery({
-        queryKey: ['machines'],
-        queryFn: async (): Promise<Machine[]> => {
-            const response = await fetch(`http://localhost:8000/api/v1/machines`, {
+        queryKey: ['categories'],
+        queryFn: async (): Promise<CategoriesResponse> => {
+            const response = await fetch(`http://localhost:8000/api/v1/categories/all-with-subcategories`, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
             });
-
+            
+            console.log('Fetched categories:', response);
             if (!response.ok) {
                 const error = await response.json();
                 throw new Error(error.message);
@@ -59,11 +51,11 @@ export function useGetAllMachines() {
     });
 }
 
-export function useGetMachineById(id: number) {
+export function useGetCategoryById(id: number) {
     return useQuery({
-        queryKey: ['machine', id],
-        queryFn: async (): Promise<Machine> => {
-            const response = await fetch(`${API_URL}/machines/${id}`, {
+        queryKey: ['category', id],
+        queryFn: async (): Promise<Category> => {
+            const response = await fetch(`${API_URL}/categories/${id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -80,10 +72,10 @@ export function useGetMachineById(id: number) {
     });
 }
 
-export function useCreateMachine() {
+export function useCreateCategory() {
     return useMutation({
-        mutationFn: async (data: Partial<Machine>) => {
-            const response = await fetch(`${API_URL}/machines`, {
+        mutationFn: async (data: Partial<Category>) => {
+            const response = await fetch(`${API_URL}/categories`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,8 +93,8 @@ export function useCreateMachine() {
         },
         onSuccess: () => {
             toast({
-                title: "Machine créée avec succès",
-                description: "La machine a été ajoutée au catalogue",
+                title: "Catégorie créée avec succès",
+                description: "La catégorie a été ajoutée au système",
             });
         },
         onError: (error: Error) => {
@@ -115,10 +107,10 @@ export function useCreateMachine() {
     });
 }
 
-export function useUpdateMachine() {
+export function useUpdateCategory() {
     return useMutation({
-        mutationFn: async ({ id, data }: { id: number; data: Partial<Machine> }) => {
-            const response = await fetch(`${API_URL}/machines/${id}`, {
+        mutationFn: async ({ id, data }: { id: number; data: Partial<Category> }) => {
+            const response = await fetch(`${API_URL}/categories/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,8 +128,42 @@ export function useUpdateMachine() {
         },
         onSuccess: () => {
             toast({
-                title: "Machine mise à jour",
+                title: "Catégorie mise à jour",
                 description: "Les modifications ont été enregistrées",
+            });
+        },
+        onError: (error: Error) => {
+            toast({
+                variant: "destructive",
+                title: "Erreur",
+                description: error.message,
+            });
+        },
+    });
+}
+
+export function useDeleteCategory() {
+    return useMutation({
+        mutationFn: async (id: number) => {
+            const response = await fetch(`${API_URL}/categories/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'credentials': 'include',
+                },
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
+
+            return response.json();
+        },
+        onSuccess: () => {
+            toast({
+                title: "Catégorie supprimée",
+                description: "La catégorie a été supprimée du système",
             });
         },
         onError: (error: Error) => {

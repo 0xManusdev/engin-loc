@@ -119,7 +119,7 @@ export default function EquipementDetailPage() {
       <div className="container py-12 text-center">
         <h1 className="text-2xl font-bold mb-4">Équipement non trouvé</h1>
         <p className="mb-6">L&apos;équipement que vous recherchez n&apos;existe pas.</p>
-        <Link href={`/catalogue/${category}`}>
+        <Link href={`/client/catalogue/${category}`}>
           <Button>Retour à la catégorie</Button>
         </Link>
       </div>
@@ -167,7 +167,7 @@ export default function EquipementDetailPage() {
   return (
     <div className="container py-8">
       <div className="mb-6">
-        <Link href={`/catalogue/${category}`} className="flex items-center text-zinc-500 hover:text-zinc-900">
+        <Link href={`/client/catalogue/${category}`} className="flex items-center text-zinc-500 hover:text-zinc-900">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Retour à la catégorie
         </Link>

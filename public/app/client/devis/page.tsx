@@ -147,7 +147,7 @@ export default function DevisPage() {
   return (
     <div className="container py-8">
       <div className="mb-6">
-        <Link href={`/catalogue/${equipementId}`} className="flex items-center text-zinc-500 hover:text-zinc-900">
+        <Link href={`/client/catalogue/${equipementId}`} className="flex items-center text-zinc-500 hover:text-zinc-900">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Retour aux détails
         </Link>

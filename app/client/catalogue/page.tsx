@@ -2,180 +2,145 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, PenToolIcon as Tool, Car, Zap, ArrowRight } from "lucide-react"
+import { Search, Filter, PenToolIcon as Tool } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useGetAllMachines } from "@/hooks/use-machines"
+import { useGetAllCategories } from "@/hooks/use-categories"
 
 export default function CataloguePage() {
+	// États locaux pour la gestion des filtres et de l'interface
 	const [searchTerm, setSearchTerm] = useState("")
-	const [priceRange, setPriceRange] = useState([0, 50000])
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([])
 	const [disponibilite, setDisponibilite] = useState(false)
-	const [sortBy, setSortBy] = useState("prix-asc")
+	const [sortBy, setSortBy] = useState("nom-asc")
 	const [isFilterOpen, setIsFilterOpen] = useState(false)
 	const [activeTab, setActiveTab] = useState("location")
 
-	// Catégories principales
-	const categories = [
-		{
-			id: "btp",
-			name: "Engins BTP",
-			icon: Tool,
-			subcategories: [
-				{ id: "levage", name: "Engins de Levage" },
-				{ id: "tractopelle", name: "Tractopelle" },
-				{ id: "chargeuses", name: "Chargeuses" },
-				{ id: "divers", name: "Engins et Outils Divers" },
-			],
-		},
-		{
-			id: "vehicules",
-			name: "Véhicules",
-			icon: Car,
-			subcategories: [
-				{ id: "avec-conducteur", name: "Avec Conducteur / Guide" },
-				{ id: "sans-conducteur", name: "Sans Conducteur" },
-				{ id: "co-voiturage", name: "Co-voiturage" },
-			],
-		},
-		{
-			id: "energie",
-			name: "Énergie",
-			icon: Zap,
-			subcategories: [
-				{ id: "groupes-electrogenes", name: "Groupes Électrogènes" },
-				{ id: "panneaux-solaires", name: "Panneaux Solaires" },
-			],
-		},
-	]
+	// Récupération des données depuis l'API
+	const { data: machinesResponse, isLoading: machinesLoading } = useGetAllMachines()
+	const { data: categoriesResponse, isLoading: categoriesLoading } = useGetAllCategories()
 
-	// Données fictives pour les équipements
-	const equipements = [
-		{
-			id: 1,
-			nom: "Grue à tour 40m",
-			type: "Grue",
-			categorie: "btp",
-			sousCategorie: "levage",
-			prix: 150000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: true,
-			typeOffre: "location",
-		},
-		{
-			id: 2,
-			nom: "Tractopelle JCB 3CX",
-			type: "Tractopelle",
-			categorie: "btp",
-			sousCategorie: "tractopelle",
-			prix: 80000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: true,
-			typeOffre: "location",
-		},
-		{
-			id: 3,
-			nom: "Chargeuse Caterpillar 950H",
-			type: "Chargeuse",
-			categorie: "btp",
-			sousCategorie: "chargeuses",
-			prix: 120000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: true,
-			typeOffre: "vente",
-		},
-		{
-			id: 4,
-			nom: "Bétonnière 350L",
-			type: "Bétonnière",
-			categorie: "btp",
-			sousCategorie: "divers",
-			prix: 15000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: true,
-			typeOffre: "location",
-		},
-		{
-			id: 5,
-			nom: "Camion Benne avec Chauffeur",
-			type: "Camion",
-			categorie: "vehicules",
-			sousCategorie: "avec-conducteur",
-			prix: 45000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: true,
-			typeOffre: "location",
-		},
-		{
-			id: 6,
-			nom: "Voiture Utilitaire",
-			type: "Utilitaire",
-			categorie: "vehicules",
-			sousCategorie: "sans-conducteur",
-			prix: 25000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: false,
-			typeOffre: "location",
-		},
-		{
-			id: 7,
-			nom: "Groupe électrogène 20kVA",
-			type: "Groupe électrogène",
-			categorie: "energie",
-			sousCategorie: "groupes-electrogenes",
-			prix: 35000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: true,
-			typeOffre: "vente",
-		},
-		{
-			id: 8,
-			nom: "Panneau solaire 1000W",
-			type: "Panneau solaire",
-			categorie: "energie",
-			sousCategorie: "panneaux-solaires",
-			prix: 20000,
-			image: "/placeholder.svg?height=200&width=300",
-			disponible: true,
-			typeOffre: "location",
-		},
-	]
+	// Extraction des données
+	const machines = machinesResponse || []
+	const categories =
+		Array.isArray(categoriesResponse?.data)
+			? categoriesResponse?.data
+			: Array.isArray(categoriesResponse?.data?.categories)
+			? categoriesResponse?.data.categories
+			: []
 
-	// Filtrer les équipements
-	const filteredEquipements = equipements
+	console.log('categories', categories)
+	
+
+	// Création des catégories avec sous-catégories pour l'affichage
+	interface SubCategory {
+		id: number
+		nom: string
+		description?: string
+	}
+
+	interface Category {
+		id: number
+		nom: string
+		subCategories?: SubCategory[]
+	}
+
+	interface CategoryWithSubcategories {
+		id: string
+		name: string
+		icon: typeof Tool
+		subcategories: SubCategoryWithDescription[]
+	}
+
+	interface SubCategoryWithDescription {
+		id: string
+		name: string
+		description?: string
+	}
+
+		const categoriesWithSubcategories: CategoryWithSubcategories[] = categories.map((category: Category) => ({
+			id: category.id.toString(),
+			name: category.nom,
+			icon: Tool, // Icône par défaut, vous pouvez adapter selon la catégorie
+			subcategories: category.subCategories?.map((sub: SubCategory) => ({
+				id: sub.id.toString(),
+				name: sub.nom,
+				description: sub.description
+			})) || []
+		}))
+
+	// Fonction pour obtenir le nom de la catégorie
+	const getCategoryName = (categoryId: number) => {
+		const category = categories.find(cat => cat.id === categoryId)
+		return category ? category.nom : "Catégorie inconnue"
+	}
+
+	// Fonction pour obtenir le nom de la sous-catégorie
+	const getSubCategoryName = (subCategoryId: number) => {
+		// On cherche dans toutes les catégories pour trouver la sous-catégorie
+		for (const category of categories) {
+			const subCategory = category.subCategories?.find(sub => sub.id === subCategoryId)
+			if (subCategory) {
+				return subCategory.nom
+			}
+		}
+		return "Sous-catégorie inconnue"
+	}
+
+
+
+	// Filtrer les machines
+	const filteredMachines = machines
 		.filter(
-			(equip) =>
-				equip.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				equip.type.toLowerCase().includes(searchTerm.toLowerCase()),
+			(machine) =>
+				machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				machine.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				getCategoryName(machine.subCategoryId).toLowerCase().includes(searchTerm.toLowerCase())
 		)
-		.filter((equip) => equip.prix >= priceRange[0] && equip.prix <= priceRange[1])
-		.filter(
-			(equip) =>
-				selectedCategories.length === 0 ||
-				selectedCategories.includes(equip.categorie) ||
-				selectedCategories.includes(equip.sousCategorie),
-		)
-		.filter((equip) => !disponibilite || equip.disponible)
-		.filter((equip) => activeTab === "tous" || equip.typeOffre === activeTab)
+		.filter((machine) => {
+			// Pour l'instant, on filtre par disponibilité basée sur l'état
+			if (disponibilite) {
+				return machine.state === "AVAILABLE"
+			}
+			return true
+		})
+		.filter((machine) => {
+			// Filtrage par catégorie
+			if (selectedCategories.length === 0) return true
+			return selectedCategories.includes(machine.subCategoryId.toString()) ||
+				   selectedCategories.includes(machine.subCategory.categoryId.toString())
+		})
 		.sort((a, b) => {
-			if (sortBy === "prix-asc") return a.prix - b.prix
-			if (sortBy === "prix-desc") return b.prix - a.prix
-			if (sortBy === "nom-asc") return a.nom.localeCompare(b.nom)
-			if (sortBy === "nom-desc") return b.nom.localeCompare(a.nom)
-			return 0
+			// Tri par nom pour l'instant (vous pouvez adapter selon vos besoins)
+			if (sortBy === "nom-asc") return a.name.localeCompare(b.name)
+			if (sortBy === "nom-desc") return b.name.localeCompare(a.name)
+			// Tri par nom par défaut
+			return a.name.localeCompare(b.name)
 		})
 
 	const handleCategoryChange = (category: string) => {
 		setSelectedCategories((prev) =>
 			prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],
+		)
+	}
+
+	// État de chargement
+	if (machinesLoading || categoriesLoading) {
+		return (
+			<div className="container py-8">
+				<div className="text-center py-12">
+					<h3 className="text-lg font-medium">Chargement...</h3>
+					<p className="text-zinc-500 mt-2">Récupération des données en cours</p>
+				</div>
+			</div>
 		)
 	}
 
@@ -188,31 +153,6 @@ export default function CataloguePage() {
 				</p>
 			</div>
 
-			{/* Catégories principales */}
-			{/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-				{categories.map((category) => (
-					<Link key={category.id} href={`/catalogue/${category.id}`}>
-						<Card className="overflow-hidden transition-all hover:shadow-lg">
-							<div className="aspect-video relative bg-primary/10">
-								<div className="absolute inset-0 flex items-center justify-center">
-									<category.icon className="h-16 w-16 text-primary" />
-								</div>
-							</div>
-							<CardContent className="p-4 text-center">
-								<h3 className="text-xl font-bold">{category.name}</h3>
-								<p className="text-sm text-zinc-500 mt-1">{category.subcategories.map((sub) => sub.name).join(", ")}</p>
-							</CardContent>
-							<CardFooter className="p-4 pt-0 flex justify-center">
-								<Button variant="ghost" size="sm" className="gap-1">
-									Voir les équipements
-									<ArrowRight className="h-4 w-4" />
-								</Button>
-							</CardFooter>
-						</Card>
-					</Link>
-				))}
-			</div> */}
-
 			<div className="flex flex-col md:flex-row gap-6">
 				{/* Filtres pour desktop */}
 				<div className="hidden md:block w-64 space-y-6">
@@ -220,33 +160,10 @@ export default function CataloguePage() {
 						<h3 className="font-medium mb-4">Filtres</h3>
 
 						<div className="space-y-6">
-							<Tabs defaultValue="location" value={activeTab} onValueChange={setActiveTab}>
-								<TabsList className="grid w-full grid-cols-3">
-									<TabsTrigger value="location">Location</TabsTrigger>
-									<TabsTrigger value="vente">Vente</TabsTrigger>
-									<TabsTrigger value="tous">Tous</TabsTrigger>
-								</TabsList>
-							</Tabs>
-
-							<div className="space-y-2">
-								<h4 className="text-sm font-medium">Prix (FCFA)</h4>
-								<Slider
-									defaultValue={[0, 50000]}
-									max={200000}
-									step={5000}
-									value={priceRange}
-									onValueChange={setPriceRange}
-								/>
-								<div className="flex items-center justify-between">
-									<span className="text-xs">{priceRange[0]} FCFA</span>
-									<span className="text-xs">{priceRange[1]} FCFA</span>
-								</div>
-							</div>
-
 							<div className="space-y-2">
 								<h4 className="text-sm font-medium">Catégories</h4>
 								<div className="space-y-2">
-									{categories.map((category) => (
+									{categoriesWithSubcategories.map((category) => (
 										<div key={category.id} className="space-y-1">
 											<div className="flex items-center space-x-2">
 												<Checkbox
@@ -258,18 +175,20 @@ export default function CataloguePage() {
 													{category.name}
 												</Label>
 											</div>
-											<div className="ml-6 space-y-1">
-												{category.subcategories.map((sub) => (
-													<div key={sub.id} className="flex items-center space-x-2">
-														<Checkbox
-															id={sub.id}
-															checked={selectedCategories.includes(sub.id)}
-															onCheckedChange={() => handleCategoryChange(sub.id)}
-														/>
-														<Label htmlFor={sub.id}>{sub.name}</Label>
-													</div>
-												))}
-											</div>
+											{category.subcategories.length > 0 && (
+												<div className="ml-6 space-y-1">
+													{category.subcategories.map((sub) => (
+														<div key={sub.id} className="flex items-center space-x-2">
+															<Checkbox
+																id={sub.id}
+																checked={selectedCategories.includes(sub.id)}
+																onCheckedChange={() => handleCategoryChange(sub.id)}
+															/>
+															<Label htmlFor={sub.id}>{sub.name}</Label>
+														</div>
+													))}
+												</div>
+											)}
 										</div>
 									))}
 								</div>
@@ -292,10 +211,9 @@ export default function CataloguePage() {
 								className="w-full"
 								onClick={() => {
 									setSearchTerm("")
-									setPriceRange([0, 200000])
 									setSelectedCategories([])
 									setDisponibilite(false)
-									setSortBy("prix-asc")
+									setSortBy("nom-asc")
 									setActiveTab("location")
 								}}
 							>
@@ -325,8 +243,6 @@ export default function CataloguePage() {
 									<SelectValue placeholder="Trier par" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="prix-asc">Prix (croissant)</SelectItem>
-									<SelectItem value="prix-desc">Prix (décroissant)</SelectItem>
 									<SelectItem value="nom-asc">Nom (A-Z)</SelectItem>
 									<SelectItem value="nom-desc">Nom (Z-A)</SelectItem>
 								</SelectContent>
@@ -354,24 +270,9 @@ export default function CataloguePage() {
 										</Tabs>
 
 										<div className="space-y-2">
-											<h4 className="text-sm font-medium">Prix (FCFA)</h4>
-											<Slider
-												defaultValue={[0, 50000]}
-												max={200000}
-												step={5000}
-												value={priceRange}
-												onValueChange={setPriceRange}
-											/>
-											<div className="flex items-center justify-between">
-												<span className="text-xs">{priceRange[0]} FCFA</span>
-												<span className="text-xs">{priceRange[1]} FCFA</span>
-											</div>
-										</div>
-
-										<div className="space-y-2">
 											<h4 className="text-sm font-medium">Catégories</h4>
 											<div className="space-y-2">
-												{categories.map((category) => (
+												{categoriesWithSubcategories.map((category) => (
 													<div key={category.id} className="space-y-1">
 														<div className="flex items-center space-x-2">
 															<Checkbox
@@ -405,10 +306,9 @@ export default function CataloguePage() {
 											className="w-full"
 											onClick={() => {
 												setSearchTerm("")
-												setPriceRange([0, 200000])
 												setSelectedCategories([])
 												setDisponibilite(false)
-												setSortBy("prix-asc")
+												setSortBy("nom-asc")
 												setActiveTab("location")
 												setIsFilterOpen(false)
 											}}
@@ -425,35 +325,41 @@ export default function CataloguePage() {
 						</div>
 					</div>
 
-					{filteredEquipements.length > 0 ? (
+					{filteredMachines.length > 0 ? (
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-							{filteredEquipements.map((equip) => (
-								<Card key={equip.id} className="overflow-hidden">
+							{filteredMachines.map((machine) => (
+								<Card key={machine.id} className="overflow-hidden">
 									<div className="relative">
-										<img src={equip.image || "/placeholder.svg"} alt={equip.nom} className="w-full h-48 object-cover" />
-										{!equip.disponible && (
+										<img 
+											src={machine.images && machine.images.length > 0 ? machine.images[0].imageUrl : "/placeholder.svg"} 
+											alt={machine.images && machine.images.length > 0 ? machine.images[0].altText : machine.name} 
+											className="w-full h-48 object-cover" 
+										/>
+										{machine.state !== "AVAILABLE" && (
 											<div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
 												Non disponible
 											</div>
 										)}
-										<div className="absolute top-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
-											{equip.typeOffre === "location" ? "Location" : "Vente"}
+										<div className="absolute top-2 left-2 rounded-full bg-primary text-white text-xs px-2 py-1">
+											Location
 										</div>
 									</div>
 									<CardContent className="p-4">
-										<h3 className="font-bold text-lg mb-1">{equip.nom}</h3>
+										<h3 className="font-bold text-lg mb-1">{machine.name}</h3>
 										<div className="flex flex-col space-y-1 text-sm text-zinc-500 mb-2">
-											<p>Catégorie: {categories.find((c) => c.id === equip.categorie)?.name}</p>
-											<p>Type: {equip.type}</p>
+											<p>Catégorie: {getCategoryName(machine.subCategory.categoryId)}</p>
+											<p>Sous-catégorie: {getSubCategoryName(machine.subCategoryId)}</p>
+											<p>Marque: {machine.brand.nom}</p>
+											<p>Localisation: {machine.location}</p>
 											<p className="font-medium text-black">
-												{equip.prix.toLocaleString()} FCFA {equip.typeOffre === "location" ? "/ jour" : ""}
+												{machine.description}
 											</p>
 										</div>
 									</CardContent>
 									<CardFooter className="p-4 pt-0">
-										<Link href={`/catalogue/details/${equip.id}`} className="w-full">
-											<Button className="w-full" disabled={!equip.disponible}>
-												{equip.disponible ? "Voir détails" : "Indisponible"}
+										<Link href={`/client/catalogue/details/${machine.id}`} className="w-full">
+											<Button className="w-full" disabled={machine.state !== "AVAILABLE"}>
+												{machine.state === "AVAILABLE" ? "Voir détails" : "Indisponible"}
 											</Button>
 										</Link>
 									</CardFooter>

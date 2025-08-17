@@ -24,14 +24,15 @@ export default function ConnexionPage() {
 	})
 	const [isLoading, setIsLoading] = useState(false)
 	const login = useLogin()
+
+
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		setIsLoading(true)
-
+		
 		console.log(formData)
 		login.mutate(formData)
-
-		setIsLoading(false)
+			
+		setIsLoading(login.isPending)
 
 		// Redirection basée sur le type d'utilisateur
 		if (userType === "client") {

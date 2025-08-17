@@ -531,7 +531,7 @@ export default function CategoryPage() {
                     </div>
                   </CardContent>
                   <CardFooter className="p-4 pt-0">
-                    <Link href={`/catalogue/details/${equip.id}`} className="w-full">
+                    <Link href={`/client/catalogue/details/${equip.id}`} className="w-full">
                       <Button className="w-full" disabled={!equip.disponible}>
                         {equip.disponible ? "Voir détails" : "Indisponible"}
                       </Button>

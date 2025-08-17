@@ -191,7 +191,7 @@ export default function CataloguePage() {
       {/* Catégories principales */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {categories.map((category) => (
-          <Link key={category.id} href={`/catalogue/${category.id}`}>
+          <Link key={category.id} href={`/client/catalogue/${category.id}`}>
             <Card className="overflow-hidden transition-all hover:shadow-lg">
               <div className="aspect-video relative bg-primary/10">
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -451,7 +451,7 @@ export default function CataloguePage() {
                     </div>
                   </CardContent>
                   <CardFooter className="p-4 pt-0">
-                    <Link href={`/catalogue/details/${equip.id}`} className="w-full">
+                    <Link href={`/client/catalogue/details/${equip.id}`} className="w-full">
                       <Button className="w-full" disabled={!equip.disponible}>
                         {equip.disponible ? "Voir détails" : "Indisponible"}
                       </Button>

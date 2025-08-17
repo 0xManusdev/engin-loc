@@ -139,7 +139,7 @@ export default function FavorisPage() {
                 </div>
               </CardContent>
               <CardFooter className="p-4 pt-0 flex gap-2">
-                <Link href={`/catalogue/${favori.categorie}/${favori.id}`} className="flex-1">
+                <Link href={`/client/catalogue/${favori.categorie}/${favori.id}`} className="flex-1">
                   <Button variant="outline" className="w-full">
                     Voir détails
                   </Button>
