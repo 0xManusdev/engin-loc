@@ -1,9 +1,9 @@
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { API_URL } from '@/lib/utils';
 
 // const API_URL = "http://localhost:8000/api";
-const API_URL = process.env.API_URL
 
 interface Machine {
     id: number;
@@ -43,7 +43,9 @@ export function useGetAllMachines() {
     return useQuery({
         queryKey: ['machines'],
         queryFn: async (): Promise<Machine[]> => {
-            const response = await fetch(`http://localhost:8000/api/v1/machines`, {
+            const response = await fetch(`${API_URL}/machines`, {
+                method: 'GET',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -64,6 +66,8 @@ export function useGetMachineById(id: number) {
         queryKey: ['machine', id],
         queryFn: async (): Promise<Machine> => {
             const response = await fetch(`${API_URL}/machines/${id}`, {
+                method: 'GET',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -85,9 +89,9 @@ export function useCreateMachine() {
         mutationFn: async (data: Partial<Machine>) => {
             const response = await fetch(`${API_URL}/machines`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'credentials': 'include',
                 },
                 body: JSON.stringify(data),
             });
@@ -120,9 +124,9 @@ export function useUpdateMachine() {
         mutationFn: async ({ id, data }: { id: number; data: Partial<Machine> }) => {
             const response = await fetch(`${API_URL}/machines/${id}`, {
                 method: 'PUT',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'credentials': 'include',
                 },
                 body: JSON.stringify(data),
             });

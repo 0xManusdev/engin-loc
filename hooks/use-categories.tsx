@@ -2,9 +2,9 @@
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { API_URL } from '@/lib/utils';
 
 // const API_URL = "http://localhost:8000/api";
-const API_URL = process.env.API_URL
 
 interface Category {
     id: number;
@@ -34,7 +34,7 @@ export function useGetAllCategories() {
     return useQuery({
         queryKey: ['categories'],
         queryFn: async (): Promise<CategoriesResponse> => {
-            const response = await fetch(`http://localhost:8000/api/v1/categories/all-with-subcategories`, {
+            const response = await fetch(`${API_URL}/categories/all-with-subcategories`, {
                 headers: {
                     'Content-Type': 'application/json',
                 }

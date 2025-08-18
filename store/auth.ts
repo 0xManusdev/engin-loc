@@ -18,8 +18,6 @@ interface AuthState {
 	error: string | null;
 	isAdmin: boolean;
 	isClient: boolean;
-	isPartner: boolean;
-	isSuperAdmin: boolean;
 	fetchUser: () => Promise<void>;
 	setUser: (u: User | null) => void;
 }
@@ -48,8 +46,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 					isAuthenticated: true,
 					isAdmin: user.role === 'admin',
 					isClient: user.role === 'client',
-					isPartner: user.role === 'partner',
-					isSuperAdmin: user.role === 'superadmin'
 				});
 			} else {
 				set({ user: null, isLoading: false, isAuthenticated: false });

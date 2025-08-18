@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, PenToolIcon as Tool } from "lucide-react"
+import { Search, Filter, PenToolIcon as Tool, Loader } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -34,11 +34,11 @@ export default function CataloguePage() {
 		Array.isArray(categoriesResponse?.data)
 			? categoriesResponse?.data
 			: Array.isArray(categoriesResponse?.data?.categories)
-			? categoriesResponse?.data.categories
-			: []
+				? categoriesResponse?.data.categories
+				: []
 
 	console.log('categories', categories)
-	
+
 
 	// Création des catégories avec sous-catégories pour l'affichage
 	interface SubCategory {
@@ -66,16 +66,16 @@ export default function CataloguePage() {
 		description?: string
 	}
 
-		const categoriesWithSubcategories: CategoryWithSubcategories[] = categories.map((category: Category) => ({
-			id: category.id.toString(),
-			name: category.nom,
-			icon: Tool, // Icône par défaut, vous pouvez adapter selon la catégorie
-			subcategories: category.subCategories?.map((sub: SubCategory) => ({
-				id: sub.id.toString(),
-				name: sub.nom,
-				description: sub.description
-			})) || []
-		}))
+	const categoriesWithSubcategories: CategoryWithSubcategories[] = categories.map((category: Category) => ({
+		id: `cat-${category.id}`,
+		name: category.nom,
+		icon: Tool, // Icône par défaut, vous pouvez adapter selon la catégorie
+		subcategories: category.subCategories?.map((sub: SubCategory) => ({
+			id: `sub-${sub.id}`,
+			name: sub.nom,
+			description: sub.description
+		})) || []
+	}))
 
 	// Fonction pour obtenir le nom de la catégorie
 	const getCategoryName = (categoryId: number) => {
@@ -87,7 +87,7 @@ export default function CataloguePage() {
 	const getSubCategoryName = (subCategoryId: number) => {
 		// On cherche dans toutes les catégories pour trouver la sous-catégorie
 		for (const category of categories) {
-			const subCategory = category.subCategories?.find(sub => sub.id === subCategoryId)
+			const subCategory = category.subCategories?.find((sub: SubCategory) => sub.id === subCategoryId)
 			if (subCategory) {
 				return subCategory.nom
 			}
@@ -95,36 +95,32 @@ export default function CataloguePage() {
 		return "Sous-catégorie inconnue"
 	}
 
-
-
-	// Filtrer les machines
 	const filteredMachines = machines
-		.filter(
-			(machine) =>
-				machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				machine.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				getCategoryName(machine.subCategoryId).toLowerCase().includes(searchTerm.toLowerCase())
-		)
 		.filter((machine) => {
-			// Pour l'instant, on filtre par disponibilité basée sur l'état
-			if (disponibilite) {
-				return machine.state === "AVAILABLE"
-			}
-			return true
+			const q = searchTerm.toLowerCase();
+			const name = machine.name.toLowerCase();
+			const desc = (machine.description ?? '').toLowerCase();
+			const catName = getCategoryName(machine.subCategory?.categoryId ?? -1).toLowerCase();
+			const subcatName = getSubCategoryName(machine.subCategoryId).toLowerCase();
+
+			return (
+				name.includes(q) ||
+				desc.includes(q) ||
+				catName.includes(q) ||
+				subcatName.includes(q)
+			);
 		})
+		.filter((machine) => (disponibilite ? machine.state === 'AVAILABLE' : true))
 		.filter((machine) => {
-			// Filtrage par catégorie
-			if (selectedCategories.length === 0) return true
-			return selectedCategories.includes(machine.subCategoryId.toString()) ||
-				   selectedCategories.includes(machine.subCategory.categoryId.toString())
+			if (selectedCategories.length === 0) return true;
+
+			const subKey = `sub-${machine.subCategoryId}`;
+			const catKey = `cat-${machine.subCategory?.categoryId ?? ''}`;
+
+			return selectedCategories.includes(subKey) || selectedCategories.includes(catKey);
 		})
-		.sort((a, b) => {
-			// Tri par nom pour l'instant (vous pouvez adapter selon vos besoins)
-			if (sortBy === "nom-asc") return a.name.localeCompare(b.name)
-			if (sortBy === "nom-desc") return b.name.localeCompare(a.name)
-			// Tri par nom par défaut
-			return a.name.localeCompare(b.name)
-		})
+		.sort((a, b) => (sortBy === 'nom-desc' ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name)));
+
 
 	const handleCategoryChange = (category: string) => {
 		setSelectedCategories((prev) =>
@@ -133,16 +129,15 @@ export default function CataloguePage() {
 	}
 
 	// État de chargement
-	if (machinesLoading || categoriesLoading) {
-		return (
-			<div className="container py-8">
-				<div className="text-center py-12">
-					<h3 className="text-lg font-medium">Chargement...</h3>
-					<p className="text-zinc-500 mt-2">Récupération des données en cours</p>
-				</div>
-			</div>
-		)
-	}
+	// if (machinesLoading || categoriesLoading) {
+	// 	return (
+	// 		<div className="flex-1 items-center justify-center py-8">
+	// 			<div className="flex justify-center items-center">
+	// 				<div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
+	// 			</div>
+	// 		</div>
+	// 	)
+	// }
 
 	return (
 		<div className="container py-8">
@@ -324,54 +319,61 @@ export default function CataloguePage() {
 							</Sheet>
 						</div>
 					</div>
-
-					{filteredMachines.length > 0 ? (
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-							{filteredMachines.map((machine) => (
-								<Card key={machine.id} className="overflow-hidden">
-									<div className="relative">
-										<img 
-											src={machine.images && machine.images.length > 0 ? machine.images[0].imageUrl : "/placeholder.svg"} 
-											alt={machine.images && machine.images.length > 0 ? machine.images[0].altText : machine.name} 
-											className="w-full h-48 object-cover" 
-										/>
-										{machine.state !== "AVAILABLE" && (
-											<div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-												Non disponible
+					{
+						machinesLoading ? (
+							<div className="flex items-center justify-center py-8">
+								<div className="flex justify-center items-center">
+									<div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent"></div>
+								</div>
+							</div>
+						) : filteredMachines.length > 0 ? (
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+								{filteredMachines.map((machine) => (
+									<Card key={machine.id} className="overflow-hidden">
+										<div className="relative">
+											<img
+												src={machine.images && machine.images.length > 0 ? machine.images[0].imageUrl : "/placeholder.svg"}
+												alt={machine.images && machine.images.length > 0 ? machine.images[0].altText : machine.name}
+												className="w-full h-48 object-cover"
+											/>
+											{machine.state !== "AVAILABLE" && (
+												<div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+													Non disponible
+												</div>
+											)}
+											<div className="absolute top-2 left-2 rounded-full bg-primary text-white text-xs px-2 py-1">
+												Location
 											</div>
-										)}
-										<div className="absolute top-2 left-2 rounded-full bg-primary text-white text-xs px-2 py-1">
-											Location
 										</div>
-									</div>
-									<CardContent className="p-4">
-										<h3 className="font-bold text-lg mb-1">{machine.name}</h3>
-										<div className="flex flex-col space-y-1 text-sm text-zinc-500 mb-2">
-											<p>Catégorie: {getCategoryName(machine.subCategory.categoryId)}</p>
-											<p>Sous-catégorie: {getSubCategoryName(machine.subCategoryId)}</p>
-											<p>Marque: {machine.brand.nom}</p>
-											<p>Localisation: {machine.location}</p>
-											<p className="font-medium text-black">
-												{machine.description}
-											</p>
-										</div>
-									</CardContent>
-									<CardFooter className="p-4 pt-0">
-										<Link href={`/client/catalogue/details/${machine.id}`} className="w-full">
-											<Button className="w-full" disabled={machine.state !== "AVAILABLE"}>
-												{machine.state === "AVAILABLE" ? "Voir détails" : "Indisponible"}
-											</Button>
-										</Link>
-									</CardFooter>
-								</Card>
-							))}
-						</div>
-					) : (
-						<div className="text-center py-12">
-							<h3 className="text-lg font-medium">Aucun équipement trouvé</h3>
-							<p className="text-zinc-500 mt-2">Essayez de modifier vos filtres de recherche</p>
-						</div>
-					)}
+										<CardContent className="p-4">
+											<h3 className="font-bold text-lg mb-1">{machine.name}</h3>
+											<div className="flex flex-col space-y-1 text-sm text-zinc-500 mb-2">
+												<p>Catégorie: {getCategoryName(machine.subCategory.categoryId)}</p>
+												<p>Sous-catégorie: {getSubCategoryName(machine.subCategoryId)}</p>
+												<p>Marque: {machine.brand.nom}</p>
+												<p>Localisation: {machine.location}</p>
+												<p className="font-medium text-black">
+													{machine.description}
+												</p>
+											</div>
+										</CardContent>
+										<CardFooter className="p-4 pt-0">
+											<Link href={`/client/catalogue/details/${machine.id}`} className="w-full">
+												<Button className="w-full" disabled={machine.state !== "AVAILABLE"}>
+													{machine.state === "AVAILABLE" ? "Voir détails" : "Indisponible"}
+												</Button>
+											</Link>
+										</CardFooter>
+									</Card>
+								))}
+							</div>
+						) : (
+							<div className="text-center py-12">
+								<h3 className="text-lg font-medium">Aucun équipement trouvé</h3>
+								<p className="text-zinc-500 mt-2">Essayez de modifier vos filtres de recherche</p>
+							</div>
+						)
+					}
 				</div>
 			</div>
 		</div>

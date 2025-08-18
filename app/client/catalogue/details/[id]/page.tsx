@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -18,16 +19,19 @@ import { useGetMachineById } from "@/hooks/use-machines"
 // Import du type DateRange depuis react-day-picker
 import type { DateRange } from "react-day-picker"
 
-export default function MachineDetailPage({ params }: { params: { id: string } }) {
+export default function MachineDetailPage({ params }: { params: any }) {
     const router = useRouter()
+
+    // If params is a Promise, unwrap it with React.use()
+    const resolvedParams = typeof params?.then === "function" ? React.use(params) : params
     
     // Debug: afficher les paramètres reçus
-    console.log('Params reçus:', params)
-    console.log('Type de params.id:', typeof params?.id)
-    console.log('Valeur de params.id:', params?.id)
+    console.log('Params reçus:', resolvedParams)
+    console.log('Type de params.id:', typeof resolvedParams?.id)
+    console.log('Valeur de params.id:', resolvedParams?.id)
     
     // Validation et parsing de l'ID
-    if (!params?.id) {
+    if (!resolvedParams?.id) {
         return (
             <div className="container py-12 text-center">
                 <h1 className="text-2xl font-bold mb-4">ID manquant</h1>
@@ -39,7 +43,7 @@ export default function MachineDetailPage({ params }: { params: { id: string } }
         )
     }
     
-    const id = Number.parseInt(params.id)
+    const id = Number.parseInt(resolvedParams.id)
     
     // Validation que l'ID est un nombre valide
     if (isNaN(id)) {
@@ -161,18 +165,12 @@ export default function MachineDetailPage({ params }: { params: { id: string } }
                     </div>
 
                     <div className="text-2xl font-bold mb-6">
-                        {/* Prix temporairement désactivé - à adapter selon vos besoins */}
-                        {/* {machine.price?.toLocaleString() || "Prix sur demande"} FCFA <span className="text-sm font-normal text-zinc-500">/ jour</span> */}
                         <span className="text-lg font-normal text-zinc-500">Prix sur demande</span>
                     </div>
 
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="details">Détails</TabsTrigger>
-                            <TabsTrigger value="reservation">Réservation</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="details" className="space-y-4 pt-4">
-                            <p>{machine.description}</p>
+                    <div>Détails</div>
+                    <div className="space-y-4 pt-4">
+                        <p>{machine.description}</p>
 
                             <Separator />
 
@@ -202,18 +200,33 @@ export default function MachineDetailPage({ params }: { params: { id: string } }
                                 </ul>
                             </div>
 
+                            <div className="space-y-4">
+                                <div className="flex items-center space-x-2 text-zinc-500">
+                                    <Truck className="h-4 w-4" />
+                                    <span>Livraison et installation incluses</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-zinc-500">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Réservation flexible, annulation gratuite jusqu&apos;à 48h avant</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-zinc-500">
+                                    <Clock className="h-4 w-4" />
+                                    <span>Support technique disponible 24/7</span>
+                                </div>
+                            </div>
+
                             <Separator />
 
                             <div className="flex justify-end">
                                 <Button 
-                                    onClick={() => setActiveTab("reservation")}
+                                    onClick={() => handleReservation()}
                                     disabled={!isAvailable()}
                                 >
-                                    {isAvailable() ? "Réserver maintenant" : "Non disponible"}
+                                    {isAvailable() ? "Nous contacter" : "Non disponible"}
                                 </Button>
                             </div>
-                        </TabsContent>
-                        <TabsContent value="reservation" className="space-y-4 pt-4">
+                        </div>
+                        {/* <TabsContent value="reservation" className="space-y-4 pt-4">
                             {!isAvailable() ? (
                                 <Card>
                                     <CardContent className="pt-6 text-center">
@@ -296,8 +309,7 @@ export default function MachineDetailPage({ params }: { params: { id: string } }
                             </div>
                                 </>
                             )}
-                        </TabsContent>
-                    </Tabs>
+                        </TabsContent> */}
                 </div>
             </div>
         </div>
