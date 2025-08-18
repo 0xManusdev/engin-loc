@@ -1,59 +1,64 @@
 import { create } from 'zustand';
 
+type RoleName = 'admin' | 'client' | 'partner' | string;
 
 interface User {
 	email: string;
-	password: string;
 	name: string;
 	lastName: string;
 	phone: string;
-	cni: string;
+	role: { nom: RoleName };
 }
 
 interface AuthState {
 	user: User | null;
 	isLoading: boolean;
 	isAuthenticated: boolean;
-	loading: boolean;
 	error: string | null;
+
+	// dérivés stockés (ou à calculer via sélecteurs, au choix)
 	isAdmin: boolean;
 	isClient: boolean;
-	fetchUser: () => Promise<void>;
-	setUser: (u: User | null) => void;
-}
+	isPartner: boolean;
 
+	// actions
+	setUser: (u: User | null) => void;
+	setLoading: (b: boolean) => void;
+	setError: (msg: string | null) => void;
+	logout: () => void;
+}
 
 export const useAuthStore = create<AuthState>((set) => ({
 	user: null,
 	isLoading: false,
 	isAuthenticated: false,
-	loading: false,
 	error: null,
 	isAdmin: false,
 	isClient: false,
 	isPartner: false,
-	isSuperAdmin: false,
-	setUser: (user) => set({ user }),
-	fetchUser: async () => {
-		set({ isLoading: true });
-		try {
-			const response = await fetch(`${process.env.API_URL}/auth/me`, { credentials: 'include' });
-			if (response.ok) {
-				const user = await response.json();
-				set({
-					user,
-					isLoading: false,
-					isAuthenticated: true,
-					isAdmin: user.role === 'admin',
-					isClient: user.role === 'client',
-				});
-			} else {
-				set({ user: null, isLoading: false, isAuthenticated: false });
-			}
-		} catch (error) {
-			console.error(error);
-		} finally {
-			set({ user: null, isLoading: false });
-		}
-	},
+
+	setUser: (user) =>
+		set(() => {
+			const role = (user?.role?.nom ?? '').toLowerCase();
+			return {
+				user,
+				isAuthenticated: !!user,
+				isAdmin: role === 'admin',
+				isClient: role === 'client',
+				isPartner: role === 'partner',
+				error: null,
+			};
+		}),
+
+	setLoading: (b) => set({ isLoading: b }),
+	setError: (msg) => set({ error: msg }),
+
+	logout: () =>
+		set({
+			user: null,
+			isAuthenticated: false,
+			isAdmin: false,
+			isClient: false,
+			isPartner: false,
+		}),
 }));

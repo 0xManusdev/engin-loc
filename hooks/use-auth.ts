@@ -1,10 +1,12 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
+import { API_URL } from '@/lib/utils';
+import { useAuthStore } from '@/store/auth';
+import { use } from 'react';
 
-const API_URL = "http://localhost:8000/api/v1";
 
 export interface RegisterClientData {
     name: string;
@@ -106,6 +108,9 @@ export function useRegisterPartner() {
 
 export function useLogin() {
     const router = useRouter();
+    const queryClient = useQueryClient();
+    const setUser = useAuthStore(s => s.setUser);
+
 
     return useMutation({
         mutationFn: async (data: LoginData) => {
@@ -113,7 +118,6 @@ export function useLogin() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'credentials': 'include',
                 },
                 body: JSON.stringify(data),
             });
@@ -126,15 +130,19 @@ export function useLogin() {
             return response.json();
         },
         onSuccess: (data) => {
+            setUser(data.user);
+
+            queryClient.invalidateQueries();
+            console.log("User logged in:", useAuthStore.getState().isAuthenticated);
             toast({
                 title: "Connexion réussie",
                 description: "Bienvenue sur K&R Secure",
             });
 
             // Redirect based on user type
-            if (data.userType === 'client') {
+            if ((data.user.role.nom).toLowerCase() === 'client') {
                 router.push('/client/tableau-de-bord');
-            } else {
+            } else if ((data.user.role.nom).toLowerCase() === 'admin') {
                 router.push('/partenaire/tableau-de-bord');
             }
         },

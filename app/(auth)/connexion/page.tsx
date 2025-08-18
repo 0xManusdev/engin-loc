@@ -35,11 +35,11 @@ export default function ConnexionPage() {
 		setIsLoading(login.isPending)
 
 		// Redirection basée sur le type d'utilisateur
-		if (userType === "client") {
-			router.push("/client/tableau-de-bord")
-		} else {
-			router.push("/partenaire/tableau-de-bord")
-		}
+		// if (userType === "client") {
+		// 	router.push("/client/tableau-de-bord")
+		// } else {
+		// 	router.push("/partenaire/tableau-de-bord")
+		// }
 	}
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
