@@ -21,7 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { useSession } from "next-auth/react"
+// import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
 
 export default function PartenaireTableauDeBord() {
@@ -183,7 +183,7 @@ export default function PartenaireTableauDeBord() {
 		}
 	}
 
-	const { data: session, status } = useSession()
+	// const { data: session, status } = useSession()
 
 	if (status === "authenticated") {
 		return (
