@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useAuthStore } from "@/store/auth"
 import {
-    Menu, Search, ShoppingCart, MessageCircle, User, Building, ChevronDown,
+    Menu, Search, User, Building, ChevronDown,
     LogOut
 } from "lucide-react"
 
@@ -13,11 +14,14 @@ import { Input } from "@/components/ui/input"
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { useAuthStore } from "@/store/auth"
+import { useLogout } from "@/hooks/use-auth"
 
 export function SiteHeader() {
     const [isOpen, setIsOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState("")
+    const { mutate: logout } = useLogout()
+
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
@@ -42,9 +46,9 @@ export function SiteHeader() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-56">
-                            <DropdownMenuItem asChild><Link href="/client/client/catalogue/btp">Engins BTP</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/client/catalogue/vehicules">Véhicules</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/client/catalogue/energie">Énergie</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/client/catalogue/btp">Engins BTP</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/client/catalogue/vehicules">Véhicules</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/client/catalogue/energie">Énergie</Link></DropdownMenuItem>
                             <DropdownMenuItem asChild><Link href="/client/catalogue">Voir tout</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -58,14 +62,14 @@ export function SiteHeader() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-56">
                             <DropdownMenuItem asChild><Link href="/client/vente-achat">Vente & Achat</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/service-apres-vente">Service Après-Vente</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/surete-securite">Sûreté & Sécurité</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/conseils-assistance">Conseils & Assistance</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/service-apres-vente">Service Après-Vente</Link></DropdownMenuItem>
+                            {/* <DropdownMenuItem asChild><Link href="/client/surete-securite">Sûreté & Sécurité</Link></DropdownMenuItem>
+                            <DropdownMenuItem asChild><Link href="/client/conseils-assistance">Conseils & Assistance</Link></DropdownMenuItem> */}
                         </DropdownMenuContent>
                     </DropdownMenu>
 
                     <Link href="/client/devenir-partenaire" className="text-sm font-medium hover:text-primary">Devenir Partenaire</Link>
-                    <Link href="/client/contact" className="text-sm font-medium hover:text-primary">Contact</Link>
+                    <Link href="/contact" className="text-sm font-medium hover:text-primary">Contact</Link>
                 </nav>
 
                 {/* Right actions - Desktop */}
@@ -78,19 +82,23 @@ export function SiteHeader() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56">
                             {
-                                useAuthStore.getState().isAuthenticated ? (
+                                isAuthenticated ? (
                                     <>
-                                        <DropdownMenuItem asChild><Link href="/profil"><User className="mr-2 h-4 w-4" />Mon Profil</Link></DropdownMenuItem>
-                                        <DropdownMenuItem asChild><Link href="/deconnexion"><LogOut className="mr-2 h-4 w-4" />Se déconnecter</Link></DropdownMenuItem>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/client/catalogue">
+                                                <User className="mr-2 h-4 w-4" />Mon Profil</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => logout()}>
+                                            <LogOut className="mr-2 h-4 w-4" />Se déconnecter
+                                        </DropdownMenuItem>
                                     </>
                                 ) : (
                                     <>
                                         <DropdownMenuItem asChild><Link href="/connexion"><User className="mr-2 h-4 w-4" />Se connecter</Link></DropdownMenuItem>
                                         <DropdownMenuItem asChild><Link href="/inscription"><Building className="mr-2 h-4 w-4" />Inscription</Link></DropdownMenuItem>
-                                        <DropdownMenuItem asChild><Link href="/client/tableau-de-bord">Espace Client</Link></DropdownMenuItem>
-                                        <DropdownMenuItem asChild><Link href="/partenaire/tableau-de-bord">Espace Partenaire</Link></DropdownMenuItem>
                                     </>
-                                )}
+                                )
+                            }
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -157,8 +165,8 @@ export function SiteHeader() {
                                             ["/contact", "Contact"],
                                             ["/connexion", "Connexion"],
                                             ["/inscription", "Inscription"],
-                                            ["/client/tableau-de-bord", "Espace Client"],
-                                            ["/partenaire/tableau-de-bord", "Espace Partenaire"],
+                                            // ["/client/tableau-de-bord", "Espace Client"],
+                                            // ["/partenaire/tableau-de-bord", "Espace Partenaire"],
                                         ].map(([href, label]) => (
                                             <Link
                                                 key={href}

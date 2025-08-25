@@ -9,6 +9,15 @@ import { API_URL } from '@/lib/utils';
 interface Category {
     id: number;
     nom: string;
+    subCategories: SubCategory[];
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface SubCategory {
+    id: number;
+    nom: string;
     description: string;
     createdAt: string;
     updatedAt: string;
@@ -24,10 +33,8 @@ interface Pagination {
 export interface CategoriesResponse {
     success: boolean;
     message: string;
-    data: {
-        categories: Category[];
-        pagination: Pagination;
-    };
+    data: Category[]; // The API returns an array of categories directly in data
+    pagination?: Pagination; // Pagination is optional and may be outside data or not present
 }
 
 export function useGetAllCategories() {
@@ -47,7 +54,9 @@ export function useGetAllCategories() {
             }
 
             return response.json();
-        }
+        },
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
     });
 }
 

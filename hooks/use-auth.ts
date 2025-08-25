@@ -141,7 +141,7 @@ export function useLogin() {
 
             // Redirect based on user type
             if ((data.user.role.nom).toLowerCase() === 'client') {
-                router.push('/client/tableau-de-bord');
+                router.push('/client/catalogue');
             } else if ((data.user.role.nom).toLowerCase() === 'admin') {
                 router.push('/partenaire/tableau-de-bord');
             }
@@ -159,6 +159,7 @@ export function useLogin() {
 
 export function useLogout() {
     const router = useRouter();
+    const logoutStore = useAuthStore(s => s.logout);
 
     return useMutation({
         mutationFn: async () => {
@@ -177,6 +178,9 @@ export function useLogout() {
             return response.json();
         },
         onSuccess: () => {
+            // Mettre à jour le store Zustand
+            logoutStore();
+            
             toast({
                 title: "Déconnexion réussie",
                 description: "Vous avez été déconnecté avec succès",

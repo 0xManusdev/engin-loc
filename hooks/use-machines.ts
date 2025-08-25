@@ -6,15 +6,12 @@ import { API_URL } from '@/lib/utils';
 // const API_URL = "http://localhost:8000/api";
 
 interface Machine {
-    id: number;
     name: string;
     description: string;
     state: string;
     location: string;
-    createdAt: string;
-    updatedAt: string;
-    subCategoryId: number;
-    brandId: number;
+    subCategoryId: string;
+    brandId: string;
     subCategory: {
         id: number;
         categoryId: number;

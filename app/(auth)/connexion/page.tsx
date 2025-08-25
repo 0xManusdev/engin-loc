@@ -55,23 +55,11 @@ export default function ConnexionPage() {
 					<p className="text-zinc-500">Connectez-vous à votre compte</p>
 				</div>
 
-				<Tabs defaultValue="client" onValueChange={setUserType} className="w-full">
-					<TabsList className="grid w-full grid-cols-2">
-						<TabsTrigger value="client" className="flex items-center gap-2">
-							<User className="h-4 w-4" />
-							Client
-						</TabsTrigger>
-						<TabsTrigger value="partenaire" className="flex items-center gap-2">
-							<Building className="h-4 w-4" />
-							Partenaire
-						</TabsTrigger>
-					</TabsList>
-
-					<TabsContent value="client">
+				
 						<Card>
 							<CardHeader>
-								<CardTitle>Espace Client</CardTitle>
-								<CardDescription>Accédez à votre espace client pour gérer vos locations.</CardDescription>
+								<CardTitle>Connexion</CardTitle>
+								<CardDescription>Entrez vos identifiants pour vous connecter</CardDescription>
 							</CardHeader>
 							<form onSubmit={handleSubmit}>
 								<CardContent className="space-y-4">
@@ -120,7 +108,7 @@ export default function ConnexionPage() {
 								</CardContent>
 								<CardFooter className="flex flex-col space-y-4">
 									<Button type="submit" className="w-full" disabled={isLoading}>
-										{isLoading ? (
+										{login.isPending ? (
 											<>
 												<div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
 												Connexion en cours...
@@ -138,9 +126,7 @@ export default function ConnexionPage() {
 								</CardFooter>
 							</form>
 						</Card>
-					</TabsContent>
-
-					<TabsContent value="partenaire">
+					{/* <TabsContent value="partenaire">
 						<Card>
 							<CardHeader>
 								<CardTitle>Espace Partenaire</CardTitle>
@@ -211,8 +197,8 @@ export default function ConnexionPage() {
 								</CardFooter>
 							</form>
 						</Card>
-					</TabsContent>
-				</Tabs>
+					</TabsContent> */}
+				{/* </Tabs> */}
 			</div>
 		</div>
 	)

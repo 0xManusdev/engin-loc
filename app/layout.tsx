@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { ReactQueryProvider } from "@/lib/react-query-provider"
+import { AuthProvider } from "@/components/auth-provider"
 
 import "./globals.css"
 
@@ -28,12 +29,14 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
 					<ReactQueryProvider>
-					<div className="relative flex min-h-screen flex-col">
-						<SiteHeader />
-						<main className="flex-1">{children}</main>
-						<SiteFooter />
-						<Toaster />
-					</div>
+						<AuthProvider>
+							<div className="relative flex min-h-screen flex-col">
+								<SiteHeader />
+								<main className="flex-1">{children}</main>
+								<SiteFooter />
+								<Toaster />
+							</div>
+						</AuthProvider>
 					</ReactQueryProvider>
 				</ThemeProvider>
 			</body>
