@@ -79,7 +79,7 @@ export default function CataloguePage() {
 
 	// Fonction pour obtenir le nom de la catégorie
 	const getCategoryName = (categoryId: number) => {
-		const category = categories.find(cat => cat.id === categoryId)
+		const category = categories.find((cat: Category) => cat.id === categoryId)
 		return category ? category.nom : "Catégorie inconnue"
 	}
 

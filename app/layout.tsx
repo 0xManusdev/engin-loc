@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { ReactQueryProvider } from "@/lib/react-query-provider"
 import { AuthProvider } from "@/components/auth-provider"
+import { API_URL } from "@/lib/utils"
 
 import "./globals.css"
 
@@ -18,18 +19,30 @@ export const metadata = {
 	description: "Plateforme de location et vente d'équipements professionnels pour entreprises et particuliers",
 }
 
-export default function RootLayout({
+
+async function getSession() {
+    const res = await fetch(`${API_URL}/auth/me`, {
+        cache: "no-store",
+    });
+    if (!res.ok) return { user: null };
+    return res.json();
+  }
+
+
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode
 }) {
+
+	const session = await getSession()
 
 	return (
 		<html lang="fr">
 			<body className={inter.className}>
 				<ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
 					<ReactQueryProvider>
-						<AuthProvider>
+						<AuthProvider session={session}>
 							<div className="relative flex min-h-screen flex-col">
 								<SiteHeader />
 								<main className="flex-1">{children}</main>
