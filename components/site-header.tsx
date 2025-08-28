@@ -47,8 +47,8 @@ export function SiteHeader() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-56">
                             <DropdownMenuItem asChild><Link href="/client/catalogue/btp">Engins BTP</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/catalogue/vehicules">Véhicules</Link></DropdownMenuItem>
-                            <DropdownMenuItem asChild><Link href="/client/catalogue/energie">Énergie</Link></DropdownMenuItem>
+                            {/* <DropdownMenuItem asChild><Link href="/client/catalogue/vehicules">Véhicules</Link></DropdownMenuItem> */}
+                            {/* <DropdownMenuItem asChild><Link href="/client/catalogue/energie">Énergie</Link></DropdownMenuItem> */}
                             <DropdownMenuItem asChild><Link href="/client/catalogue">Voir tout</Link></DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

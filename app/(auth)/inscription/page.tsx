@@ -219,7 +219,9 @@ export default function InscriptionPage() {
                                         href="/connexion"
                                         className="text-zinc-900 hover:underline"
                                     >
-                                        Se connecter
+                                       {
+                                        registerClient.isPending ? "En cours..." : "Se connecter"
+                                       } 
                                     </Link>
                                 </p>
                             </CardFooter>
