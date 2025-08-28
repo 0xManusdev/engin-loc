@@ -14,7 +14,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { DatePickerWithRange } from "@/components/date-range-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useGetMachineById } from "@/hooks/use-machines"
+import { useCreateReservation, useGetMachineById } from "@/hooks/use-machines"
+import { useAuthStore } from "@/store/auth"
 
 // Import du type DateRange depuis react-day-picker
 import type { DateRange } from "react-day-picker"
@@ -22,6 +23,8 @@ import type { DateRange } from "react-day-picker"
 export default function MachineDetailPage() {
     const router = useRouter()
     const params = useParams()
+    const { user, isAuthenticated } = useAuthStore()
+    const createReservation = useCreateReservation()
 
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     const id = Number.parseInt(idParam as string)
@@ -73,11 +76,28 @@ export default function MachineDetailPage() {
         )
     }
 
-    const handleReservation = () => {
-        if (dateRange.from && dateRange.to && lieu && usage) {
-            router.push(
-                `/client/devis?machine=${id}&debut=${dateRange.from.toISOString()}&fin=${dateRange.to.toISOString()}&lieu=${lieu}&usage=${usage}`,
-            )
+    const handleReservation = async () => {
+        if (!dateRange.from || !dateRange.to || !lieu || !usage) return
+
+        if (!isAuthenticated || !user) {
+            router.push(`/inscription?redirect=/client/catalogue/details/${id}`)
+            return
+        }
+
+        const payload = {
+            clientId: user.id,
+            machineId: id,
+            startDate: dateRange.from.toISOString(),
+            endDate: dateRange.to.toISOString(),
+            deliveryAddress: lieu,
+            usageType: usage.toUpperCase() as any,
+            whatsappPhone: user.phone,
+        }
+
+        try {
+            await createReservation.mutateAsync(payload)
+        } catch (err) {
+            // handled in hook toast
         }
     }
 
@@ -232,10 +252,10 @@ export default function MachineDetailPage() {
                                                     <SelectValue placeholder="Sélectionnez un type d'usage" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="chantier">Chantier</SelectItem>
-                                                    <SelectItem value="evenement">Événement</SelectItem>
-                                                    <SelectItem value="domestique">Usage domestique</SelectItem>
-                                                    <SelectItem value="autre">Autre</SelectItem>
+                                                    <SelectItem value="CHANTIER">Chantier</SelectItem>
+                                                    <SelectItem value="EVENEMENT">Événement</SelectItem>
+                                                    <SelectItem value="DOMESTIQUE">Usage domestique</SelectItem>
+                                                    <SelectItem value="AUTRE">Autre</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -244,9 +264,9 @@ export default function MachineDetailPage() {
                                             <Button
                                                 className="w-full"
                                                 onClick={handleReservation}
-                                                disabled={!dateRange.from || !dateRange.to || !lieu || !usage}
+                                                disabled={!dateRange.from || !dateRange.to || !lieu || !usage || createReservation.isPending}
                                             >
-                                                Soumettre la demande
+                                                {createReservation.isPending ? 'Envoi en cours...' : 'Soumettre la demande'}
                                             </Button>
                                         </div>
                                     </CardContent>

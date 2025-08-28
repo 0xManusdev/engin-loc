@@ -5,6 +5,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 type RoleName = 'admin' | 'client' | 'partner' | string;
 
 interface User {
+	id: number;
 	email: string;
 	name: string;
 	lastName: string;

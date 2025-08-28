@@ -5,11 +5,12 @@ import { API_URL } from '@/lib/utils';
 
 // const API_URL = "http://localhost:8000/api";
 
-interface Machine {
+export interface Machine {
     name: string;
     description: string;
     state: string;
     location: string;
+    createdAt: string;
     subCategoryId: string;
     brandId: string;
     subCategory: {
@@ -145,6 +146,53 @@ export function useUpdateMachine() {
             toast({
                 variant: "destructive",
                 title: "Erreur",
+                description: error.message,
+            });
+        },
+    });
+}
+
+type UsageType = 'CHANTIER' | 'EVENEMENT' | 'DOMESTIQUE' | 'AUTRE'
+
+export interface CreateReservationPayload {
+    clientId: number
+    machineId: number
+    startDate: string
+    endDate: string
+    deliveryAddress: string
+    usageType: UsageType
+    whatsappPhone: string
+}
+
+export function useCreateReservation() {
+    return useMutation({
+        mutationFn: async (data: CreateReservationPayload) => {
+            const response = await fetch(`${API_URL}/reservations`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Erreur lors de la réservation');
+            }
+
+            return response.json();
+        },
+        onSuccess: () => {
+            toast({
+                title: 'Demande envoyée',
+                description: 'Votre demande de réservation a été soumise',
+            });
+        },
+        onError: (error: Error) => {
+            toast({
+                variant: 'destructive',
+                title: 'Erreur',
                 description: error.message,
             });
         },
