@@ -9,11 +9,10 @@ import { use } from 'react';
 
 
 export interface RegisterClientData {
-    name: string;
+    firstName: string;
     lastName: string;
     phone: string;
     email: string;
-    cni: string;
     password: string;
 }
 
@@ -35,11 +34,11 @@ export function useRegisterClient() {
 
     return useMutation({
         mutationFn: async (data: RegisterClientData) => {
-            const response = await fetch(`${API_URL}/auth/register/client`, {
+            const response = await fetch(`${API_URL}/auth/register/`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'credentials': 'include',
                 },
                 body: JSON.stringify(data),
             });
@@ -75,9 +74,9 @@ export function useRegisterPartner() {
         mutationFn: async (data: RegisterPartnerData) => {
             const response = await fetch(`${API_URL}/auth/register/partner`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'credentials': 'include',
                 },
                 body: JSON.stringify(data),
             });
@@ -116,6 +115,7 @@ export function useLogin() {
         mutationFn: async (data: LoginData) => {
             const response = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -165,9 +165,9 @@ export function useLogout() {
         mutationFn: async () => {
             const response = await fetch(`${API_URL}/auth/logout`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'credentials': 'include',
                 },
             });
 

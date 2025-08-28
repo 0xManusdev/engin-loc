@@ -110,7 +110,7 @@ export default function Home() {
 					<div className="flex flex-col justify-center items-center space-y-4 max-w-3xl text-center z-10">
 						<h1 className="text-3xl text-white font-bold tracking-tighter sm:text-5xl xl:text-6xl">Location et vente d'équipements professionnels</h1>
 						<p className="text-white/80 text-base sm:text-lg md:text-xl">
-							Trouvez, louez ou achetez des équipements de qualité pour vos projets. Engins BTP, véhicules, énergie et plus encore.
+                        UtiliPro Services est une entreprise de location de matériels BTP, utilitaires et groupes électrogènes, dédiée aux professionnels exigeants. Elle combine performance, polyvalence et service sur mesure pour accompagner les chantiers et projets énergétiques
 						</p>
 						<div className="flex flex-col gap-3 sm:flex-row">
 							<Link href="/client/catalogue">

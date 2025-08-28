@@ -33,7 +33,7 @@ export function SiteHeader() {
             <div className="container flex justify-between items-center h-16">
                 {/* Logo */}
                 <Link href="/" className="flex items-center space-x-2 mr-4">
-                    <span className="font-bold text-sm lg:text-xl text-accent">K&R Secure</span>
+                    <span className="font-bold text-sm lg:text-xl text-accent">UtiliPro Services</span>
                 </Link>
 
                 {/* Center Nav - Desktop */}
