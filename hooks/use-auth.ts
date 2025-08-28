@@ -2,10 +2,10 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { toast } from '@/hooks/use-toast';
 import { API_URL } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth';
 import { use } from 'react';
+import { toast } from 'sonner';
 
 
 export interface RegisterClientData {
@@ -51,18 +51,11 @@ export function useRegisterClient() {
             return response.json();
         },
         onSuccess: () => {
-            toast({
-                title: "Compte créé avec succès",
-                description: "Vous pouvez maintenant vous connecter",
-            });
+            toast.success("Compte créé avec succès");
             router.push('/connexion');
         },
         onError: (error: Error) => {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
-                description: error.message,
-            });
+            toast.error("Erreur");
         },
     });
 }
@@ -89,18 +82,11 @@ export function useRegisterPartner() {
             return response.json();
         },
         onSuccess: () => {
-            toast({
-                title: "Compte partenaire créé avec succès",
-                description: "Vous pouvez maintenant vous connecter",
-            });
+            toast.success("Compte partenaire créé avec succès");
             router.push('/connexion');
         },
         onError: (error: Error) => {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
-                description: error.message,
-            });
+            toast.error("Erreur");
         },
     });
 }
@@ -134,10 +120,7 @@ export function useLogin() {
 
             queryClient.invalidateQueries();
             console.log("User logged in:", useAuthStore.getState().isAuthenticated);
-            toast({
-                title: "Connexion réussie",
-                description: "Bienvenue sur K&R Secure",
-            });
+            toast.success("Connexion réussie");
 
             // Redirect based on user type
             if ((data.user.role.nom).toLowerCase() === 'client') {
@@ -147,11 +130,7 @@ export function useLogin() {
             }
         },
         onError: (error: Error) => {
-            toast({
-                variant: "destructive",
-                title: "Erreur de connexion",
-                description: error.message,
-            });
+            toast.error("Erreur de connexion");
         },
     });
 }
@@ -181,18 +160,11 @@ export function useLogout() {
             // Mettre à jour le store Zustand
             logoutStore();
             
-            toast({
-                title: "Déconnexion réussie",
-                description: "Vous avez été déconnecté avec succès",
-            });
+            toast.success("Déconnexion réussie");
             router.push('/');
         },
         onError: (error: Error) => {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
-                description: error.message,
-            });
+            toast.error("Erreur");
         },
     });
 }

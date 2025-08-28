@@ -211,7 +211,9 @@ export default function InscriptionPage() {
                                     disabled={!acceptTerms}
                                     onSubmit={handleClientSubmit}
                                 >
-                                    S&apos;inscrire
+                                    {
+                                        registerClient.isPending ? "En cours..." : "S&apos;inscrire"
+                                    }
                                 </Button>
                                 <p className="text-center text-sm text-zinc-500">
                                     Déjà un compte?{" "}

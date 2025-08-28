@@ -4,10 +4,10 @@ import { Inter } from "next/font/google"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
 import { ReactQueryProvider } from "@/lib/react-query-provider"
 import { AuthProvider } from "@/components/auth-provider"
 import { API_URL } from "@/lib/utils"
+import { Toaster } from "@/components/ui/sonner"
 
 import "./globals.css"
 
@@ -47,7 +47,7 @@ export default async function RootLayout({
 								<SiteHeader />
 								<main className="flex-1">{children}</main>
 								<SiteFooter />
-								<Toaster />
+								<Toaster position="top-center" richColors />
 							</div>
 						</AuthProvider>
 					</ReactQueryProvider>
